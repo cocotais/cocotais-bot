@@ -14,10 +14,10 @@ if (fse.existsSync('./config.json')) {
 } else {
     console.log("您还没有生成配置文件，已为您自动生成。")
     fse.writeFileSync("./config.json", `{
-    id: "",
-    secret: "",
-    token: "",
-    type: "private"
+    "id": "",
+    "secret": "",
+    "token": "",
+    "type": "private"
 }`)
     process.exit()
 }
