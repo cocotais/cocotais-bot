@@ -12,7 +12,6 @@
 	"author": "Cocotais Team",
 	"license": "Apache-2.0",
 	"dependencies": {
-		"@satorijs/adapter-discord": "^4.1.7",
 		"@satorijs/satori": "^3.3.2",
 		"@types/fs-extra": "^11.0.4",
 		"fs-extra": "^11.2.0",
