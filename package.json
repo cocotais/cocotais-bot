@@ -14,6 +14,8 @@
 	"dependencies": {
 		"@satorijs/adapter-discord": "^4.1.7",
 		"@satorijs/satori": "^3.3.2",
+		"@types/fs-extra": "^11.0.4",
+		"fs-extra": "^11.2.0",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.3.3"
 	},
