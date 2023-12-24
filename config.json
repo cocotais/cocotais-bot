@@ -1,6 +1,6 @@
 {
-    id: "",
-    secret: "",
-    token: "",
-    type: "private"
+    "id": "",
+    "secret": "",
+    "token": "",
+    "type": "private"
 }

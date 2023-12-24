@@ -114,3 +114,11 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# lyxbot config
+
+config.json
+
+# prod javascript
+
+lib
