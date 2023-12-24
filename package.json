@@ -1,0 +1,22 @@
+{
+	"name": "cocotais-bot",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "ts-node ./src/index.ts",
+    "start:prod": "node ./lib/index.js",
+    "build": "tsc",
+    "build:live": "nodemon --watch src/**/*.ts --exec ts-node src/index.ts"
+	},
+	"author": "Cocotais Team",
+	"license": "Apache-2.0",
+	"dependencies": {
+		"ts-node": "^10.9.2",
+		"typescript": "^5.3.3"
+	},
+	"devDependencies": {
+		"@types/node": "^20.10.5",
+    "nodemon": "^3.0.2"
+	}
+}
