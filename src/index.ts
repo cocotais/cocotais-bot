@@ -1,11 +1,10 @@
-import QQBot from '@satorijs/adapter-qq'
 import fse from 'fs-extra'
 import { startBot } from './start'
 
 
 if (fse.existsSync('./config.json')) {
     fse.readJson('./config.json')
-        .then(async (value: QQBot.Config) => {
+        .then(async (value: any) => {
             await startBot(value)
         })
         .catch((err) => {
