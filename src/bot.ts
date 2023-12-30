@@ -1,20 +1,23 @@
-import { IOpenAPI } from "qq-guild-bot";
+import { IOpenAPI } from "qq-bot-sdk";
 import { EventEmitter } from "events";
 
 export function botHandler(context: IOpenAPI, ws: EventEmitter) {
     ws.on('READY', (data) => {
-        console.log('[READY] 已连接到服务器');
+        console.log('[READY] 已连接到服务器' + data);
     });
     ws.on('ERROR', (data) => {
         console.log('[ERROR] 连接到服务器失败 :', data);
     });
+    ws.on('GROUP', (data) => {
+        console.log('[GROUP] 事件接收 :', data);
+    })
     ws.on('GUILDS', (data) => {
         console.log('[GUILDS] 事件接收 :', data);
     });
     ws.on('GUILD_MEMBERS', (data) => {
         console.log('[GUILD_MEMBERS] 事件接收 :', data);
     });
-    ws.on('AT_MESSAGE_CREATE', (data) => {
+    ws.prependListener('GUILD_MESSAGES', (data) => {
         console.log('[GUILD_MESSAGES] 事件接收 :', data);
     });
     ws.on('GUILD_MESSAGE_REACTIONS', (data) => {

@@ -1,4 +1,4 @@
-import { GetWsParam, Config, createOpenAPI, createWebsocket } from 'qq-guild-bot';
+import { GetWsParam, Config, createOpenAPI, createWebsocket } from 'qq-bot-sdk';
 import { botHandler } from './bot';
 
 export async function startBot(options: GetWsParam & Config) {

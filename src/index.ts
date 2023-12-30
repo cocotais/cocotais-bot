@@ -1,6 +1,6 @@
 import fse from 'fs-extra'
 import { startBot } from './start'
-import { GetWsParam, Config } from 'qq-guild-bot';
+import { GetWsParam, Config } from 'qq-bot-sdk';
 
 if (fse.existsSync('./config.json')) {
     fse.readJson('./config.json')
