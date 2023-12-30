@@ -1,6 +1,11 @@
 import { IOpenAPI } from "qq-bot-sdk";
 import { EventEmitter } from "events";
 
+/**
+ * 机器人启动处理器
+ * @param context 机器人实例
+ * @param ws WebSocket实例
+ */
 export function botHandler(context: IOpenAPI, ws: EventEmitter) {
     ws.on('READY', (data) => {
         console.log('[READY] 已连接到服务器' + data);
