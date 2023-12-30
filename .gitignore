@@ -122,3 +122,4 @@ config.json
 # prod javascript
 
 lib
+config.json
