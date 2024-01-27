@@ -4,10 +4,12 @@
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
-    "start": "ts-node ./src/index.ts",
-    "start:prod": "node ./lib/index.js",
     "build": "tsc",
-    "build:live": "nodemon --watch src/**/*.ts --exec ts-node src/index.ts"
+    "clean": "pm2 delete all",
+    "start": "cocotais-bot start",
+    "start:deep": "pm2 delete all & cocotais-bot start",
+    "start:build": "npm run build & cocotais-bot start",
+    "start:deep-build": "pm2 delete all & npm run build & cocotais-bot start"
   },
   "bin": {
     "cocotais-bot": "bin/cocotais-bot"
@@ -17,6 +19,7 @@
   "dependencies": {
     "@types/fs-extra": "^11.0.4",
     "fs-extra": "^11.2.0",
+    "pm2": "^5.3.0",
     "qq-bot-sdk": "^1.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"

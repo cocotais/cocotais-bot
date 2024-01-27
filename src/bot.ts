@@ -1,17 +1,47 @@
 import { IOpenAPI } from "qq-bot-sdk";
 import { EventEmitter } from "events";
 
+function keepAlive(){
+    process.send!({
+        type: 'process:msg',
+        data: {
+            type: 'ping',
+            data: 'ping'
+        }
+    })
+}
+
 /**
  * 机器人启动处理器
  * @param context 机器人实例
  * @param ws WebSocket实例
  */
 export function botHandler(context: IOpenAPI, ws: EventEmitter) {
+    keepAlive()
     ws.on('READY', (data) => {
         console.log('[READY] 已连接到服务器' + data);
+        if(!process.send) console.log('[ERROR] Not IPC Channel')
+        keepAlive()
+        process.send!({
+            type: 'process:msg',
+            data: {
+                type: 'login.success',
+                data: data
+            }
+        })
     });
-    ws.on('ERROR', (data) => {
+    ws.on('DEAD', (data) => {
         console.log('[ERROR] 连接到服务器失败 :', data);
+        if(!process.send) console.log('[ERROR] Not IPC Channel')
+        keepAlive()
+        process.send!({
+            type: 'process:msg',
+            data: {
+                type: 'login.error',
+                data: data
+            }
+        })
+        throw new Error(data);
     });
     ws.on('GROUP', (data) => {
         console.log('[GROUP] 事件接收 :', data);
@@ -22,7 +52,7 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter) {
     ws.on('GUILD_MEMBERS', (data) => {
         console.log('[GUILD_MEMBERS] 事件接收 :', data);
     });
-    ws.prependListener('GUILD_MESSAGES', (data) => {
+    ws.on('GUILD_MESSAGES', (data) => {
         console.log('[GUILD_MESSAGES] 事件接收 :', data);
     });
     ws.on('GUILD_MESSAGE_REACTIONS', (data) => {

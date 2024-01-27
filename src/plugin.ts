@@ -4,7 +4,7 @@ import { IOpenAPI } from "qq-bot-sdk";
 /**
  * Cocotais Bot 插件类
  */
-class CocotaisBotPlugin extends EventEmitter {
+export class CocotaisBotPlugin extends EventEmitter {
     /**机器人实例 */
     private botContext: IOpenAPI | null;
     /**WebSocket实例 */
@@ -22,7 +22,7 @@ class CocotaisBotPlugin extends EventEmitter {
         this.botWs = null
         this._mount = () => { };
         this._unmount = () => { };
-        this.events = []
+        this.events = ['GROUP','GUILDS','GUILD_MEMBERS','GUILD_MESSAGES','GUILD_MESSAGE_REACTIONS','DIRECT_MESSAGE','INTERACTION','MESSAGE_AUDIT','FORUMS_EVENT','AUDIO_ACTION','PUBLIC_GUILD_MESSAGES']
     }
     /**
      * 判断机器人是否开启
@@ -96,4 +96,3 @@ class CocotaisBotPlugin extends EventEmitter {
         this._unmount = fun
     }
 }
-exports.CocotaisBotPlugin = CocotaisBotPlugin
