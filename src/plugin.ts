@@ -5,7 +5,7 @@ import { globalStage } from ".";
 
 function applyPlugin(name: string, path: string, bot: IOpenAPI, ws: EventEmitter) {
     try {
-        const plugin = require(path).default
+        const plugin = require(path)
         plugin.enableBot(bot, ws)
         globalStage.plugin.push({
             id: globalStage.plugin.length,
@@ -23,10 +23,11 @@ function applyPlugin(name: string, path: string, bot: IOpenAPI, ws: EventEmitter
 
 function removePlugin(id: number) {
     try {
+        let path = globalStage.plugin[id].path
         globalStage.plugin[id].pluginObject.disableBot()
         globalStage.plugin.splice(id, 1)
         for (const key in require.cache) {
-            if (key.includes(globalStage.plugin[id].path)) {
+            if (key.includes(path)) {
                 delete require.cache[key];
             }
         }

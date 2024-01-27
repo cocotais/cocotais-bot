@@ -106,11 +106,14 @@ if (!isRequired) {
             }
         }
         else if (msg.data.type == 'plugin.list') {
+            let plugins = globalStage.plugin.map(obj => {
+                return { id: obj.id, name: obj.name };
+            });
             process.send!({
                 type: 'process:msg',
                 data: {
                     type: 'plugin.list',
-                    data: globalStage.plugin
+                    data: plugins
                 }
             })
         }

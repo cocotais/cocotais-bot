@@ -27,7 +27,7 @@ if (process.argv[2] == "start") {
                 pm2.disconnect()
                 process.exit()
             }
-            if(list.length != 0){
+            if (list.length != 0) {
                 console.log("[守护进行] PM2有其余运行进程。当前版本仅支持独占PM2运行。")
                 pm2.disconnect()
                 process.exit()
@@ -35,7 +35,7 @@ if (process.argv[2] == "start") {
         })
         pm2.start({
             name,
-            script: packagePath+'index.js',
+            script: packagePath + 'index.js',
             autorestart: false
         }, (e) => {
             if (e) {
@@ -251,8 +251,13 @@ else if (process.argv[2] == "plugin") {
             }
             console.log("[守护进程] LaunchBus成功")
             pm2_bus.on('process:msg', function (packet: any) {
-                console.log("[后台进程] 插件列表：")
-                console.log(packet.data.data)
+                if (packet.data.type == 'plugin.list') {
+                    console.log("[后台进程] 插件列表：")
+                    console.log(packet.data.data)
+                    pm2.disconnect()
+                    process.exit()
+                }
+
             })
         })
     }
