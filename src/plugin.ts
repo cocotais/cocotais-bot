@@ -1,7 +1,66 @@
 import EventEmitter from "events";
 import { IOpenAPI } from "qq-bot-sdk";
 import { events } from "./bot";
+import { globalStage } from ".";
 
+function applyPlugin(name: string, path: string, bot: IOpenAPI, ws: EventEmitter) {
+    try {
+        const plugin = new (require(path).default)()
+        plugin.enableBot(bot, ws)
+        globalStage.plugin.push({
+            id: globalStage.plugin.length,
+            name: name,
+            path: path,
+            pluginObject: plugin
+        })
+        return true
+    } catch (e) {
+        console.error('Plugin load error:' + String(e))
+        return false
+    }
+}
+
+
+function removePlugin(id: number) {
+    try {
+        globalStage.plugin[id].pluginObject.disableBot()
+        globalStage.plugin.splice(id, 1)
+        for (const key in require.cache) {
+            if (key.includes(globalStage.plugin[id].path)) {
+                delete require.cache[key];
+            }
+        }
+        return true
+    } catch (e) {
+        console.error('Plugin remove error:' + String(e))
+        return false
+    }
+}
+
+function reloadPlugin(id: number) {
+    let temp = globalStage.plugin[id]
+    try {
+        if (removePlugin(id)) {
+            if (globalStage.botObject.bot != null && globalStage.botObject.ws != null)
+                if (applyPlugin(temp.name, temp.path, globalStage.botObject.bot, globalStage.botObject.ws))
+                    return true
+                else {
+                    
+                    return false
+                }
+            else{
+                console.log('Bot is not enabled.')
+                return false
+            }
+        }
+        else {
+            return false
+        }
+
+    } catch (e) {
+        console.error('Plugin reload error:' + String(e))
+    }
+}
 /**
  * Cocotais Bot 插件类
  */
@@ -86,14 +145,16 @@ export class CocotaisBotPlugin extends EventEmitter {
      * 当被挂载时
      * @param fun 执行的函数
      */
-    onMounted(fun: ()=>void) {
+    onMounted(fun: () => void) {
         this._mount = fun
     }
     /**
      * 当被卸载时
      * @param fun 执行的函数
      */
-    onUnloaded(fun: ()=>void) {
+    onUnloaded(fun: () => void) {
         this._unmount = fun
     }
 }
+
+export default {applyPlugin, reloadPlugin, removePlugin, CocotaisBotPlugin}

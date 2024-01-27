@@ -1,15 +1,111 @@
 import fse from 'fs-extra'
 import { startBot } from './start'
-import { GetWsParam, Config } from 'qq-bot-sdk';
+import { GetWsParam, Config, IOpenAPI } from 'qq-bot-sdk';
+import EventEmitter from 'events';
+import plugin, { CocotaisBotPlugin } from './plugin';
 
-process.on('message',(msg: any)=>{
-    console.log("[IPC] "+JSON.stringify(msg))
-    if(msg.data.type == 'ping'){
+interface Stage {
+    botObject: {
+        bot: IOpenAPI | null,
+        ws: EventEmitter | null
+    },
+    plugin: {
+        id: number,
+        name: string,
+        path: string,
+        pluginObject: CocotaisBotPlugin
+    }[]
+}
+
+export let globalStage: Stage = { botObject: { bot: null, ws: null }, plugin: [] }
+
+process.on('message', (msg: any) => {
+    console.log("[IPC] " + JSON.stringify(msg))
+    if (msg.data.type == 'ping') {
         process.send!({
             type: 'process:msg',
             data: {
                 type: 'pong',
                 data: 'pong'
+            }
+        })
+    }
+    else if (msg.data.type == 'plugin.apply') {
+        if (globalStage.botObject.bot != null && globalStage.botObject.ws != null) {
+            if (plugin.applyPlugin(msg.data.data.name, msg.data.data.path, globalStage.botObject.bot, globalStage.botObject.ws)){
+                process.send!({
+                    type: 'process:msg',
+                    data: {
+                        type: 'plugin.apply.success',
+                        data: 'success'
+                    }
+                })
+            }
+            else{
+                process.send!({
+                    type: 'process:msg',
+                    data: {
+                        type: 'plugin.apply.error',
+                        data: 'error'
+                    }
+                })
+            }
+        }
+        else{
+            process.send!({
+                type: 'process:msg',
+                data: {
+                    type: 'plugin.apply.error',
+                    data: 'disabled'
+                }
+            })
+        }
+    }
+    else if (msg.data.type == 'plugin.remove') {
+        if(plugin.removePlugin(msg.data.data.id)){
+            process.send!({
+                type: 'process:msg',
+                data: {
+                    type: 'plugin.remove.success',
+                    data: 'success'
+                }
+            })
+        }else{
+            process.send!({
+                type: 'process:msg',
+                data: {
+                    type: 'plugin.remove.error',
+                    data: 'error'
+                }
+            })
+        }
+    }
+    else if (msg.data.type == 'plugin.reload') {
+        if(plugin.reloadPlugin(msg.data.data.id)){
+            process.send!({
+                type: 'process:msg',
+                data: {
+                    type: 'plugin.reload.success',
+                    data: 'success'
+                }
+            })
+        }
+        else{
+            process.send!({
+                type: 'process:msg',
+                data: {
+                    type: 'plugin.reload.error',
+                    data: 'error'
+                }
+            })
+        }
+    }
+    else if (msg.data.type == 'plugin.list') {
+        process.send!({
+            type: 'process:msg',
+            data: {
+                type: 'plugin.list',
+                data: globalStage.plugin
             }
         })
     }
