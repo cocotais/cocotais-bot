@@ -1,6 +1,8 @@
 import { IOpenAPI } from "qq-bot-sdk";
 import { EventEmitter } from "events";
 
+export const events = ['GROUP','GUILDS','GUILD_MEMBERS','GUILD_MESSAGES','GUILD_MESSAGE_REACTIONS','DIRECT_MESSAGE','INTERACTION','MESSAGE_AUDIT','FORUMS_EVENT','AUDIO_ACTION','PUBLIC_GUILD_MESSAGES']
+
 function keepAlive(){
     process.send!({
         type: 'process:msg',
@@ -43,38 +45,11 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter) {
         })
         throw new Error(data);
     });
-    ws.on('GROUP', (data) => {
-        console.log('[GROUP] 事件接收 :', data);
+
+    events.forEach(event => {
+        ws.on(event, (data) => {
+            console.log(`[${event}] 事件接收 :`, data);
+        })
     })
-    ws.on('GUILDS', (data) => {
-        console.log('[GUILDS] 事件接收 :', data);
-    });
-    ws.on('GUILD_MEMBERS', (data) => {
-        console.log('[GUILD_MEMBERS] 事件接收 :', data);
-    });
-    ws.on('GUILD_MESSAGES', (data) => {
-        console.log('[GUILD_MESSAGES] 事件接收 :', data);
-    });
-    ws.on('GUILD_MESSAGE_REACTIONS', (data) => {
-        console.log('[GUILD_MESSAGE_REACTIONS] 事件接收 :', data);
-    });
-    ws.on('DIRECT_MESSAGE', (data) => {
-        console.log('[DIRECT_MESSAGE] 事件接收 :', data);
-    });
-    ws.on('INTERACTION', (data) => {
-        console.log('[INTERACTION] 事件接收 :', data);
-    });
-    ws.on('MESSAGE_AUDIT', (data) => {
-        console.log('[MESSAGE_AUDIT] 事件接收 :', data);
-    });
-    ws.on('FORUMS_EVENT', (data) => {
-        console.log('[FORUMS_EVENT] 事件接收 :', data);
-    });
-    ws.on('AUDIO_ACTION', (data) => {
-        console.log('[AUDIO_ACTION] 事件接收 :', data);
-    });
-    ws.on('PUBLIC_GUILD_MESSAGES', (data) => {
-        console.log('[PUBLIC_GUILD_MESSAGES] 事件接收 :', data);
-    });
 
 }

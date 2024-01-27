@@ -1,5 +1,6 @@
 import EventEmitter from "events";
 import { IOpenAPI } from "qq-bot-sdk";
+import { events } from "./bot";
 
 /**
  * Cocotais Bot 插件类
@@ -22,7 +23,7 @@ export class CocotaisBotPlugin extends EventEmitter {
         this.botWs = null
         this._mount = () => { };
         this._unmount = () => { };
-        this.events = ['GROUP','GUILDS','GUILD_MEMBERS','GUILD_MESSAGES','GUILD_MESSAGE_REACTIONS','DIRECT_MESSAGE','INTERACTION','MESSAGE_AUDIT','FORUMS_EVENT','AUDIO_ACTION','PUBLIC_GUILD_MESSAGES']
+        this.events = events
     }
     /**
      * 判断机器人是否开启
