@@ -1,6 +1,9 @@
 import path from 'path'
 import pm2 from 'pm2'
 
+let packagePath = path.dirname(require.resolve("cocotais-bot")) + '/'
+
+
 function cleanBot(name: string) {
     pm2.delete(name, (e) => {
         if (e) console.log(e)
@@ -32,10 +35,11 @@ if (process.argv[2] == "start") {
         })
         pm2.start({
             name,
-            script: './lib/index.js',
+            script: packagePath+'index.js',
             autorestart: false
         }, (e) => {
             if (e) {
+                console.log(e)
                 console.log("[守护进程] 启动失败：" + e.message)
                 pm2.disconnect()
                 process.exit()
@@ -80,7 +84,8 @@ if (process.argv[2] == "start") {
                 process.exit()
             }
             else if (packet.data.type == 'login.error') {
-                console.log('[后台进程] 登录失败：' + packet.data.data.msg)
+                console.log(packet)
+                console.log('[后台进程] 登录失败：' + packet.data.data)
                 cleanBot(name)
 
             }
@@ -101,8 +106,8 @@ else if (process.argv[2] == "plugin") {
                 data: {
                     type: 'plugin.apply',
                     data: {
-                        name: process.argv[4],
-                        path: path.resolve(process.argv[5])
+                        name: "plugin",
+                        path: path.resolve(process.argv[4])
                     }
                 }
             }, (e) => {
@@ -125,7 +130,8 @@ else if (process.argv[2] == "plugin") {
                     process.exit()
                 }
                 else if (packet.data.type == 'plugin.apply.error') {
-                    console.log('[后台进程] 插件应用失败：' + packet.data.data.msg)
+                    console.log(packet)
+                    console.log('[后台进程] 插件应用失败：' + packet.data.data)
                     pm2.disconnect()
                     process.exit()
                 }
@@ -168,7 +174,7 @@ else if (process.argv[2] == "plugin") {
                     process.exit()
                 }
                 else if (packet.data.type == 'plugin.remove.error') {
-                    console.log('[后台进程] 插件删除失败：' + packet.data.data.msg)
+                    console.log('[后台进程] 插件删除失败：' + packet.data.data)
                     pm2.disconnect()
                     process.exit()
                 }
@@ -211,7 +217,7 @@ else if (process.argv[2] == "plugin") {
                     process.exit()
                 }
                 else if (packet.data.type == 'plugin.reload.error') {
-                    console.log('[后台进程] 插件重载失败：' + packet.data.data.msg)
+                    console.log('[后台进程] 插件重载失败：' + packet.data.data)
                     pm2.disconnect()
                     process.exit()
                 }

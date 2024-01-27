@@ -5,7 +5,7 @@ import { globalStage } from ".";
 
 function applyPlugin(name: string, path: string, bot: IOpenAPI, ws: EventEmitter) {
     try {
-        const plugin = new (require(path).default)()
+        const plugin = require(path).default
         plugin.enableBot(bot, ws)
         globalStage.plugin.push({
             id: globalStage.plugin.length,
