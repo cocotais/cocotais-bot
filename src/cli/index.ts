@@ -68,7 +68,7 @@ if (process.argv[2] == "start") {
             }
             else if (packet.data.type == 'login.error') {
                 console.log('[后台进程] 登录失败：' + packet.data.data.msg)
-                //cleanBot(name)
+                cleanBot(name)
 
             }
         })
