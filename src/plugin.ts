@@ -100,7 +100,7 @@ export class CocotaisBotPlugin extends EventEmitter {
     /**WebSocket实例 */
     private botWs: EventEmitter | null
     /**挂载插件时执行的函数 */
-    protected _mount: () => void
+    protected _mount: (bot: IOpenAPI) => void
     /**卸载插件时执行的函数 */
     protected _unmount: () => void
     /**事件列表 */
@@ -129,7 +129,7 @@ export class CocotaisBotPlugin extends EventEmitter {
     enableBot(context: IOpenAPI, ws: EventEmitter) {
         this.botContext = context
         this.botWs = ws
-        try { this._mount() } catch (e) { console.error('Plugin execute error:' + String(e)) }
+        try { this._mount(context) } catch (e) { console.error('Plugin execute error:' + String(e)) }
 
         this.events.forEach((evt) => {
             const handler = (e: any) => {
@@ -172,7 +172,7 @@ export class CocotaisBotPlugin extends EventEmitter {
      * 当被挂载时
      * @param fun 执行的函数
      */
-    onMounted(fun: () => void) {
+    onMounted(fun: (bot: IOpenAPI) => void) {
         this._mount = fun
     }
     /**
