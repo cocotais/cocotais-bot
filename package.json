@@ -12,7 +12,6 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },
-  "devDependencies": {},
   "scripts": {
     "build": "tsc",
     "clean": "pm2 delete all",
@@ -26,5 +25,8 @@
   },
   "author": "Cocotais Team",
   "license": "Apache-2.0",
-  "types": "./lib/index.d.ts"
+  "types": "./lib/index.d.ts",
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4"
+  }
 }

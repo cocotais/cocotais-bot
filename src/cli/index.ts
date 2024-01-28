@@ -4,7 +4,7 @@ import pm2 from 'pm2'
 let packagePath = path.dirname(require.resolve("cocotais-bot")) + '/'
 
 
-function cleanBot(name: string) {
+function cleanBot(name: string|number) {
     pm2.delete(name, (e) => {
         if (e) console.log(e)
         console.log('[守护进程] 已删除')
@@ -262,4 +262,16 @@ else if (process.argv[2] == "plugin") {
         })
     }
 }
-
+else if (process.argv[2] == "stop") {
+    cleanBot(0)
+}
+else {
+    console.log('Cocotais Bot 守护进程帮助')
+    console.log('版本：'+require(packagePath+'../package.json').version)
+    console.log('使用方法：')
+    console.log('  start: 启动机器人')
+    console.log('  plugin apply: 装载机器人插件')
+    console.log('  plugin reload: 重新装载机器人插件')
+    console.log('  plugin delete: 卸载机器人插件')
+    console.log('  stop: 停止机器人')
+}
