@@ -8,7 +8,7 @@ function cleanBot(name: string | number) {
     pm2.delete(name, (e) => {
         if (e) {
             console.log('[守护进程] 删除失败：')
-            console.log(e)
+            console.log(JSON.stringify(e))
         }
         else {
             console.log('[守护进程] 已删除')
@@ -24,13 +24,13 @@ if (process.argv[2] == "start") {
     pm2.connect((e) => {
         if (e) {
             console.log("[守护进程] 连接PM2失败：")
-            console.log(e)
+            console.log(JSON.stringify(e))
             process.exit()
         }
         pm2.list((e, list) => {
             if (e) {
                 console.log("[守护进程] 获取PM2列表失败：")
-                console.log(e)
+                console.log(JSON.stringify(e))
                 pm2.disconnect()
                 process.exit()
             }
@@ -47,7 +47,7 @@ if (process.argv[2] == "start") {
         }, (e) => {
             if (e) {
                 console.log("[守护进程] 启动失败：")
-                console.log(e)
+                console.log(JSON.stringify(e))
                 pm2.disconnect()
                 process.exit()
             }
@@ -63,7 +63,7 @@ if (process.argv[2] == "start") {
             }, (e) => {
                 if (e) {
                     console.log("[守护进程] 发送测试消息失败：")
-                    console.log(e)
+                    console.log(JSON.stringify(e))
                 }
             })
         })
@@ -71,7 +71,7 @@ if (process.argv[2] == "start") {
     pm2.launchBus((err, pm2_bus) => {
         if (err) {
             console.log("[守护进程] LaunchBus失败：")
-            console.log(err)
+            console.log(JSON.stringify(err))
             pm2.disconnect()
             process.exit()
         }
@@ -93,7 +93,7 @@ if (process.argv[2] == "start") {
                 process.exit()
             }
             else if (packet.data.type == 'login.error') {
-                console.log('[后台进程] 登录失败：' + packet.data.data)
+                console.log('[后台进程] 登录失败：' + JSON.stringify(packet.data.data))
                 cleanBot(name)
 
             }
@@ -105,7 +105,7 @@ else if (process.argv[2] == "plugin") {
         pm2.connect((e) => {
             if (e) {
                 console.log("[守护进程] 连接PM2失败：")
-                console.log(e)
+                console.log(JSON.stringify(e))
                 process.exit()
             }
             pm2.sendDataToProcessId(0, {
@@ -122,14 +122,14 @@ else if (process.argv[2] == "plugin") {
             }, (e) => {
                 if (e) {
                     console.log("[守护进程] 发送数据包失败：")
-                    console.log(e)
+                    console.log(JSON.stringify(e))
                 }
             })
         })
         pm2.launchBus((err, pm2_bus) => {
             if (err) {
                 console.log("[守护进程] LaunchBus失败：")
-                console.log(err)
+                console.log(JSON.stringify(err))
                 pm2.disconnect()
                 process.exit()
             }
@@ -142,7 +142,7 @@ else if (process.argv[2] == "plugin") {
                 }
                 else if (packet.data.type == 'plugin.apply.error') {
                     console.log(packet)
-                    console.log('[后台进程] 插件应用失败：' + packet.data.data)
+                    console.log('[后台进程] 插件应用失败：' + JSON.stringify(packet.data.data))
                     pm2.disconnect()
                     process.exit()
                 }
@@ -153,7 +153,7 @@ else if (process.argv[2] == "plugin") {
         pm2.connect((e) => {
             if (e) {
                 console.log("[守护进程] 连接PM2失败：")
-                console.log(e)
+                console.log(JSON.stringify(e))
                 process.exit()
             }
             pm2.sendDataToProcessId(0, {
@@ -169,14 +169,14 @@ else if (process.argv[2] == "plugin") {
             }, (e) => {
                 if (e) {
                     console.log("[守护进程] 发送数据包失败：")
-                    console.log(e)
+                    console.log(JSON.stringify(e))
                 }
             })
         })
         pm2.launchBus((err, pm2_bus) => {
             if (err) {
                 console.log("[守护进程] LaunchBus失败：")
-                console.log(err)
+                console.log(JSON.stringify(err))
                 pm2.disconnect()
                 process.exit()
             }
@@ -188,7 +188,7 @@ else if (process.argv[2] == "plugin") {
                     process.exit()
                 }
                 else if (packet.data.type == 'plugin.remove.error') {
-                    console.log('[后台进程] 插件删除失败：' + packet.data.data)
+                    console.log('[后台进程] 插件删除失败：' + JSON.stringify(packet.data.data))
                     pm2.disconnect()
                     process.exit()
                 }
@@ -199,7 +199,7 @@ else if (process.argv[2] == "plugin") {
         pm2.connect((e) => {
             if (e) {
                 console.log("[守护进程] 连接PM2失败：")
-                console.log(e)
+                console.log(JSON.stringify(e))
                 process.exit()
             }
             pm2.sendDataToProcessId(0, {
@@ -215,14 +215,14 @@ else if (process.argv[2] == "plugin") {
             }, (e) => {
                 if (e) {
                     console.log("[守护进程] 发送数据包失败：")
-                    console.log(e)
+                    console.log(JSON.stringify(e))
                 }
             })
         })
         pm2.launchBus((err, pm2_bus) => {
             if (err) {
                 console.log("[守护进程] LaunchBus失败：")
-                console.log(err)
+                console.log(JSON.stringify(err))
                 pm2.disconnect()
                 process.exit()
             }
@@ -234,7 +234,7 @@ else if (process.argv[2] == "plugin") {
                     process.exit()
                 }
                 else if (packet.data.type == 'plugin.reload.error') {
-                    console.log('[后台进程] 插件重载失败：' + packet.data.data)
+                    console.log('[后台进程] 插件重载失败：' + JSON.stringify(packet.data.data))
                     pm2.disconnect()
                     process.exit()
                 }
@@ -245,7 +245,7 @@ else if (process.argv[2] == "plugin") {
         pm2.connect((e) => {
             if (e) {
                 console.log("[守护进程] 连接PM2失败：")
-                console.log(e)
+                console.log(JSON.stringify(e))
                 process.exit()
             }
             pm2.sendDataToProcessId(0, {
@@ -258,14 +258,14 @@ else if (process.argv[2] == "plugin") {
             }, (e) => {
                 if (e) {
                     console.log("[守护进程] 发送数据包失败：")
-                    console.log(e)
+                    console.log(JSON.stringify(e))
                 }
             })
         })
         pm2.launchBus((err, pm2_bus) => {
             if (err) {
                 console.log("[守护进程] LaunchBus失败：")
-                console.log(err)
+                console.log(JSON.stringify(err))
                 pm2.disconnect()
                 process.exit()
             }
@@ -273,7 +273,7 @@ else if (process.argv[2] == "plugin") {
             pm2_bus.on('process:msg', function (packet: any) {
                 if (packet.data.type == 'plugin.list') {
                     console.log("[后台进程] 插件列表：")
-                    console.log(packet.data.data)
+                    console.log(JSON.stringify(packet.data.data))
                     pm2.disconnect()
                     process.exit()
                 }
