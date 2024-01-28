@@ -132,7 +132,6 @@ export class CocotaisBotPlugin extends EventEmitter {
         try { this._mount() } catch (e) { console.error('Plugin execute error:' + String(e)) }
 
         this.events.forEach((evt) => {
-            console.log(evt + ' turns on.')
             const handler = (e: any) => {
 
                 this.emit(evt, e);
@@ -141,7 +140,6 @@ export class CocotaisBotPlugin extends EventEmitter {
             // 插件收到事件时，将事件及数据 emit 给插件里定义的处理函数
             this.botWs?.on(evt, (e: any) => {
                 if (this.isBotEnabled()) {
-                    console.log(evt + ' recieved.')
                     handler(e)
                 }
             });
@@ -168,7 +166,6 @@ export class CocotaisBotPlugin extends EventEmitter {
             };
             // 插件收到事件时，将事件及数据 emit 给插件里定义的处理函数
             this.off(evt, handler);
-            console.log(evt + ' turns off.')
         });
     }
     /**
