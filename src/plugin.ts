@@ -13,10 +13,16 @@ function applyPlugin(name: string, path: string, bot: IOpenAPI, ws: EventEmitter
             path: path,
             pluginObject: plugin
         })
-        return true
+        return {
+            success: true,
+            data: null
+        }
     } catch (e) {
         console.error('Plugin load error:' + String(e))
-        return false
+        return {
+            success: false,
+            data: String(e)
+        }
     }
 }
 
@@ -31,35 +37,58 @@ function removePlugin(id: number) {
                 delete require.cache[key];
             }
         }
-        return true
+        return {
+            success: true,
+            data: null
+        }
     } catch (e) {
         console.error('Plugin remove error:' + String(e))
-        return false
+        return {
+            success: false,
+            data: String(e)
+        }
     }
 }
 
 function reloadPlugin(id: number) {
     let temp = globalStage.plugin[id]
     try {
-        if (removePlugin(id)) {
-            if (globalStage.botObject.bot != null && globalStage.botObject.ws != null)
-                if (applyPlugin(temp.name, temp.path, globalStage.botObject.bot, globalStage.botObject.ws))
-                    return true
+        let remove = removePlugin(id)
+        if (remove.success) {
+            if (globalStage.botObject.bot != null && globalStage.botObject.ws != null){
+            let apply = applyPlugin(temp.name, temp.path, globalStage.botObject.bot, globalStage.botObject.ws)
+                if (apply.success)
+                    return {
+                        success: true,
+                        data: null
+                    }
                 else {
-                    
-                    return false
+                    return {
+                        success: false,
+                        data: 'Plugin apply error.' + apply.data
+                    }
                 }
-            else{
+            }else{
                 console.log('Bot is not enabled.')
-                return false
+                return {
+                    success: false,
+                    data: 'Bot is not enabled.'
+                }
             }
         }
         else {
-            return false
+            return {
+                success: false,
+                data: 'Plugin remove error.' + remove.data
+            }
         }
 
     } catch (e) {
         console.error('Plugin reload error:' + String(e))
+        return {
+            success: false,
+            data: String(e)
+        }
     }
 }
 /**

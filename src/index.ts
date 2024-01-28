@@ -37,12 +37,13 @@ if (!isRequired) {
         }
         else if (msg.data.type == 'plugin.apply') {
             if (globalStage.botObject.bot != null && globalStage.botObject.ws != null) {
-                if (plugin.applyPlugin(msg.data.data.name, msg.data.data.path, globalStage.botObject.bot, globalStage.botObject.ws)) {
+                let apply = plugin.applyPlugin(msg.data.data.name, msg.data.data.path, globalStage.botObject.bot, globalStage.botObject.ws)
+                if (apply.success) {
                     process.send!({
                         type: 'process:msg',
                         data: {
                             type: 'plugin.apply.success',
-                            data: 'success'
+                            data: apply.data
                         }
                     })
                 }
@@ -51,7 +52,7 @@ if (!isRequired) {
                         type: 'process:msg',
                         data: {
                             type: 'plugin.apply.error',
-                            data: 'error'
+                            data: apply.data
                         }
                     })
                 }
@@ -61,18 +62,19 @@ if (!isRequired) {
                     type: 'process:msg',
                     data: {
                         type: 'plugin.apply.error',
-                        data: 'disabled'
+                        data: 'Bot is disabled'
                     }
                 })
             }
         }
         else if (msg.data.type == 'plugin.remove') {
-            if (plugin.removePlugin(msg.data.data.id)) {
+            let remove = plugin.removePlugin(msg.data.data.id)
+            if (remove.success) {
                 process.send!({
                     type: 'process:msg',
                     data: {
                         type: 'plugin.remove.success',
-                        data: 'success'
+                        data: remove.data
                     }
                 })
             } else {
@@ -80,18 +82,19 @@ if (!isRequired) {
                     type: 'process:msg',
                     data: {
                         type: 'plugin.remove.error',
-                        data: 'error'
+                        data: remove.data
                     }
                 })
             }
         }
         else if (msg.data.type == 'plugin.reload') {
-            if (plugin.reloadPlugin(msg.data.data.id)) {
+            let reload = plugin.reloadPlugin(msg.data.data.id)
+            if (reload.success) {
                 process.send!({
                     type: 'process:msg',
                     data: {
                         type: 'plugin.reload.success',
-                        data: 'success'
+                        data: reload.data
                     }
                 })
             }
@@ -100,7 +103,7 @@ if (!isRequired) {
                     type: 'process:msg',
                     data: {
                         type: 'plugin.reload.error',
-                        data: 'error'
+                        data: reload.data
                     }
                 })
             }
@@ -128,6 +131,12 @@ if (!isRequired) {
                 throw new Error("配置文件读取错误，请检查配置文件是否正确。")
             })
     } else {
+        console.log("您还没有生成配置文件，已为您自动生成。")
+        fse.writeFileSync("./config.json", `{
+    "appID": "",
+    "token": "",
+    "intents": []
+}`)
         process.send!({
             type: 'process:msg',
             data: {
@@ -135,12 +144,6 @@ if (!isRequired) {
                 data: ''
             }
         })
-        console.log("您还没有生成配置文件，已为您自动生成。")
-        fse.writeFileSync("./config.json", `{
-    "appID": "",
-    "token": "",
-    "intents": []
-}`)
         process.exit()
     }
 }
