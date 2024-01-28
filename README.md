@@ -8,4 +8,21 @@
 
 ## 插件编写
 
-(待补充)
+```js
+const { CocotaisBotPlugin } = require("cocotais-bot")
+
+const plugin = new CocotaisBotPlugin()
+
+plugin.onMounted((bot) => {
+    console.log("Plugin mounted!")
+    plugin.on('GROUP', (data) => {
+        context.groupApi.postMessage(data.msg.group_openid, {
+            content: "Hi",
+            msg_type: 0,
+            msg_id: data.msg.id
+        })
+    })               
+})
+
+module.exports = plugin
+```
