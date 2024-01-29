@@ -11,7 +11,7 @@
 ```js
 const { CocotaisBotPlugin } = require("cocotais-bot")
 
-const plugin = new CocotaisBotPlugin()
+const plugin = new CocotaisBotPlugin("test-plugin","0.1.0")
 
 plugin.onMounted((bot) => {
     console.log("Plugin mounted!")
