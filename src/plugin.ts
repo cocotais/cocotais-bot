@@ -16,7 +16,7 @@ function autoloadPlugin(){
     try{
         fse.readdirSync('./plugins').forEach(file => {
             if(file.endsWith('.js')){
-                unsafelyDo(applyPlugin, './plugins/' + file, globalStage.botObject.bot, globalStage.botObject.ws)
+                unsafelyDo(applyPlugin, process.cwd() + '/plugins/' + file, globalStage.botObject.bot, globalStage.botObject.ws)
             }
         })
         return true
