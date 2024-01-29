@@ -2,6 +2,30 @@ import EventEmitter from "events";
 import { IOpenAPI } from "qq-bot-sdk";
 import { events } from "./bot";
 import { globalStage } from ".";
+import fse from 'fs-extra'
+
+function unsafelyDo(func: Function, ...args: any) {
+    try {
+        func(...args)
+    } catch (e) {
+        
+    }
+}
+
+function autoloadPlugin(){
+    try{
+        fse.readdirSync('./plugins').forEach(file => {
+            if(file.endsWith('.js')){
+                unsafelyDo(applyPlugin, './plugins/' + file, globalStage.botObject.bot, globalStage.botObject.ws)
+            }
+        })
+        return true
+    }
+    catch(e){
+        console.error('Autoload plugin error:' + String(e))
+        return false
+    }
+}
 
 function applyPlugin(path: string, bot: IOpenAPI, ws: EventEmitter) {
     try {
@@ -192,4 +216,4 @@ export class CocotaisBotPlugin extends EventEmitter {
     }
 }
 
-export default { applyPlugin, reloadPlugin, removePlugin, CocotaisBotPlugin }
+export default { autoloadPlugin, applyPlugin, reloadPlugin, removePlugin, CocotaisBotPlugin }

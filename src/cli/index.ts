@@ -89,13 +89,43 @@ if (process.argv[2] == "start") {
             }
             else if (packet.data.type == 'login.success') {
                 console.log('[后台进程] 登录成功')
-                pm2.disconnect()
-                process.exit()
+                if (process.argv[3] != '--no-autoload') {
+                    pm2.sendDataToProcessId(0, {
+                        id: 0,
+                        type: 'process:msg',
+                        topic: true,
+                        data: {
+                            type: 'plugin.autoload'
+                        }
+                    }, (e) => {
+                        if (e) {
+                            console.log("[守护进程] 发送自动加载插件消息失败：")
+                            console.log(JSON.stringify(e))
+                            pm2.disconnect()
+                            process.exit()
+                        }
+                    })
+                }
+                else {
+                    pm2.disconnect()
+                    process.exit()
+                }
+
             }
             else if (packet.data.type == 'login.error') {
                 console.log('[后台进程] 登录失败：' + JSON.stringify(packet.data.data))
                 cleanBot(name)
 
+            }
+            else if (packet.data.type == 'plugin.autoload.success') {
+                console.log('[后台进程] 插件已自动装载')
+                pm2.disconnect()
+                process.exit()
+            }
+            else if (packet.data.type == 'plugin.autoload.error') {
+                console.log('[后台进程] 插件自动装载失败')
+                pm2.disconnect()
+                process.exit()
             }
         })
     })

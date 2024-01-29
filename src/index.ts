@@ -123,8 +123,29 @@ if (!isRequired) {
                 }
             })
         }
+        else if (msg.data.type == 'plugin.autoload') {
+            if(plugin.autoloadPlugin()){
+                process.send!({
+                    type: 'process:msg',
+                    data: {
+                        type: 'plugin.autoload.success',
+                        data: null
+                    }
+                })
+            }else{
+                process.send!({
+                    type: 'process:msg',
+                    data: {
+                        type: 'plugin.autoload.error',
+                        data: null
+                    }
+                })
+            }
+        }
     })
-
+    if (!fse.pathExistsSync('./plugins')) {
+        fse.mkdirSync('./plugins')
+    }
     if (fse.existsSync('./config.json')) {
         fse.readJson('./config.json')
             .then(async (value: GetWsParam & Config) => {
