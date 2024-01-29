@@ -11,7 +11,10 @@ interface Stage {
     },
     plugin: {
         id: number,
-        name: string,
+        config: {
+            name: string,
+            version: string
+        },
         path: string,
         pluginObject: CocotaisBotPlugin
     }[]
@@ -37,7 +40,7 @@ if (!isRequired) {
         }
         else if (msg.data.type == 'plugin.apply') {
             if (globalStage.botObject.bot != null && globalStage.botObject.ws != null) {
-                let apply = plugin.applyPlugin(msg.data.data.name, msg.data.data.path, globalStage.botObject.bot, globalStage.botObject.ws)
+                let apply = plugin.applyPlugin(msg.data.data.path, globalStage.botObject.bot, globalStage.botObject.ws)
                 if (apply.success) {
                     process.send!({
                         type: 'process:msg',
@@ -110,7 +113,7 @@ if (!isRequired) {
         }
         else if (msg.data.type == 'plugin.list') {
             let plugins = globalStage.plugin.map(obj => {
-                return { id: obj.id, name: obj.name };
+                return { id: obj.id, config: obj.config };
             });
             process.send!({
                 type: 'process:msg',

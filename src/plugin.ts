@@ -3,13 +3,13 @@ import { IOpenAPI } from "qq-bot-sdk";
 import { events } from "./bot";
 import { globalStage } from ".";
 
-function applyPlugin(name: string, path: string, bot: IOpenAPI, ws: EventEmitter) {
+function applyPlugin(path: string, bot: IOpenAPI, ws: EventEmitter) {
     try {
-        const plugin = require(path)
+        const plugin: CocotaisBotPlugin = require(path)
         plugin.enableBot(bot, ws)
         globalStage.plugin.push({
             id: globalStage.plugin.length,
-            name: name,
+            config: plugin.config,
             path: path,
             pluginObject: plugin
         })
@@ -55,8 +55,8 @@ function reloadPlugin(id: number) {
     try {
         let remove = removePlugin(id)
         if (remove.success) {
-            if (globalStage.botObject.bot != null && globalStage.botObject.ws != null){
-            let apply = applyPlugin(temp.name, temp.path, globalStage.botObject.bot, globalStage.botObject.ws)
+            if (globalStage.botObject.bot != null && globalStage.botObject.ws != null) {
+                let apply = applyPlugin(temp.path, globalStage.botObject.bot, globalStage.botObject.ws)
                 if (apply.success)
                     return {
                         success: true,
@@ -68,7 +68,7 @@ function reloadPlugin(id: number) {
                         data: 'Plugin apply error.' + apply.data
                     }
                 }
-            }else{
+            } else {
                 console.log('Bot is not enabled.')
                 return {
                     success: false,
@@ -105,14 +105,22 @@ export class CocotaisBotPlugin extends EventEmitter {
     protected _unmount: () => void
     /**事件列表 */
     public events: string[]
-
-    constructor() {
+    /**插件基本信息 */
+    public config: {
+        name: string
+        version: string
+    }
+    constructor(name: string, version: string) {
         super()
         this.botContext = null;
         this.botWs = null
         this._mount = () => { };
         this._unmount = () => { };
         this.events = events
+        this.config = {
+            name: name,
+            version: version
+        }
     }
     /**
      * 判断机器人是否开启
@@ -184,4 +192,4 @@ export class CocotaisBotPlugin extends EventEmitter {
     }
 }
 
-export default {applyPlugin, reloadPlugin, removePlugin, CocotaisBotPlugin}
+export default { applyPlugin, reloadPlugin, removePlugin, CocotaisBotPlugin }
