@@ -27,7 +27,7 @@ export { CocotaisBotPlugin }
 let isRequired = require.main != module
 
 if (!isRequired) {
-    process.on('message', (msg: any) => {
+    process.on('message', async (msg: any) => {
         console.log("[IPC] " + JSON.stringify(msg))
         if (msg.data.type == 'ping') {
             process.send!({
@@ -40,7 +40,7 @@ if (!isRequired) {
         }
         else if (msg.data.type == 'plugin.apply') {
             if (globalStage.botObject.bot != null && globalStage.botObject.ws != null) {
-                let apply = plugin.applyPlugin(msg.data.data.path, globalStage.botObject.bot, globalStage.botObject.ws)
+                let apply = await plugin.applyPlugin(msg.data.data.path, globalStage.botObject.bot, globalStage.botObject.ws)
                 if (apply.success) {
                     process.send!({
                         type: 'process:msg',
@@ -91,7 +91,7 @@ if (!isRequired) {
             }
         }
         else if (msg.data.type == 'plugin.reload') {
-            let reload = plugin.reloadPlugin(msg.data.data.id)
+            let reload = await plugin.reloadPlugin(msg.data.data.id)
             if (reload.success) {
                 process.send!({
                     type: 'process:msg',

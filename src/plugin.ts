@@ -27,10 +27,11 @@ function autoloadPlugin(){
     }
 }
 
-function applyPlugin(path: string, bot: IOpenAPI, ws: EventEmitter) {
+async function applyPlugin(path: string, bot: IOpenAPI, ws: EventEmitter) {
     try {
-        const plugin: CocotaisBotPlugin = require(path)
-        plugin.enableBot(bot, ws)
+        const pluginModule = await import(path);
+        const plugin: CocotaisBotPlugin = pluginModule.default;
+        plugin.enableBot(bot, ws);
         globalStage.plugin.push({
             id: globalStage.plugin.length,
             config: plugin.config,
@@ -74,13 +75,13 @@ function removePlugin(id: number) {
     }
 }
 
-function reloadPlugin(id: number) {
+async function reloadPlugin(id: number) {
     let temp = globalStage.plugin[id]
     try {
         let remove = removePlugin(id)
         if (remove.success) {
             if (globalStage.botObject.bot != null && globalStage.botObject.ws != null) {
-                let apply = applyPlugin(temp.path, globalStage.botObject.bot, globalStage.botObject.ws)
+                let apply = await applyPlugin(temp.path, globalStage.botObject.bot, globalStage.botObject.ws)
                 if (apply.success)
                     return {
                         success: true,
