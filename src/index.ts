@@ -18,7 +18,7 @@ interface CommandStaged {
     id: number,
     provider: PluginStaged["id"] | -1,
     match: string | RegExp,
-    handler: (context: IOpenAPI) => void
+    handler: (context: IOpenAPI, msgs: string[]) => void
 }
 
 interface Stage {

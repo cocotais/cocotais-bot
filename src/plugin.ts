@@ -8,20 +8,20 @@ function unsafelyDo(func: Function, ...args: any) {
     try {
         func(...args)
     } catch (e) {
-        
+
     }
 }
 
-function autoloadPlugin(){
-    try{
+function autoloadPlugin() {
+    try {
         fse.readdirSync('./plugins').forEach(file => {
-            if(file.endsWith('.cjs') || file.endsWith('.mjs') || file.endsWith('.js')){
+            if (file.endsWith('.cjs') || file.endsWith('.mjs') || file.endsWith('.js')) {
                 unsafelyDo(applyPlugin, process.cwd() + '/plugins/' + file, globalStage.botObject.bot, globalStage.botObject.ws)
             }
         })
         return true
     }
-    catch(e){
+    catch (e) {
         console.error('Autoload plugin error:' + String(e))
         return false
     }
@@ -31,7 +31,7 @@ async function applyPlugin(path: string, bot: IOpenAPI, ws: EventEmitter) {
     try {
         const pluginModule = await import(path);
         const plugin: CocotaisBotPlugin = pluginModule.default;
-        plugin.enableBot(bot, ws);
+        plugin.enableBot(bot, ws, globalStage.plugin.length);
         globalStage.plugin.push({
             id: globalStage.plugin.length,
             config: plugin.config,
@@ -130,6 +130,8 @@ export class CocotaisBotPlugin extends EventEmitter {
     protected _unmount: () => void
     /**事件列表 */
     public events: string[]
+    /**插件ID */
+    public id: number | null
     /**插件基本信息 */
     public config: {
         name: string
@@ -142,6 +144,7 @@ export class CocotaisBotPlugin extends EventEmitter {
         this._mount = () => { };
         this._unmount = () => { };
         this.events = events
+        this.id = null
         this.config = {
             name: name,
             version: version
@@ -159,11 +162,12 @@ export class CocotaisBotPlugin extends EventEmitter {
      * @param context 机器人实例
      * @param ws WebSocket实例
      */
-    enableBot(context: IOpenAPI, ws: EventEmitter) {
+    enableBot(context: IOpenAPI, ws: EventEmitter, botId: number) {
         this.botContext = context
         this.botWs = ws
+        this.id = botId
         try { this._mount(context) } catch (e) { console.error('Plugin execute error:' + String(e)) }
-
+        this.command.id = this.id
         this.events.forEach((evt) => {
             const handler = (e: any) => {
 
@@ -214,6 +218,35 @@ export class CocotaisBotPlugin extends EventEmitter {
      */
     onUnloaded(fun: () => void) {
         this._unmount = fun
+    }
+    /**
+     * 插件命令
+     */
+    command = {
+        id: -1,
+        /**
+         * 注册一个命令
+         * @param match 命令匹配器
+         * @param desc 命令描述
+         * @param fun 命令执行器
+         * @returns 命令ID
+         */
+        register(match: string | RegExp, desc: string, fun: (context: IOpenAPI, msgs: string[]) => void) {
+            globalStage.commands.push({
+                id: globalStage.plugin.length,
+                provider: this.id,
+                match: match,
+                handler: fun
+            })
+            return globalStage.plugin.length - 1;
+        },
+        /**
+         * 卸载一个命令
+         * @param id 命令ID
+         */
+        unregister(id: number) {
+            globalStage.commands = globalStage.commands.filter((v) => v.id != id)
+        }
     }
 }
 
