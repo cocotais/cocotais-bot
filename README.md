@@ -16,6 +16,9 @@
 
 ## 插件编写
 
+插件支持普通的CommonJS模块，只需要导出一个 `CocotaisBotPlugin` 的实例即可，示例如下：
+
+plugin.js (亦可plugin.cjs)
 ```js
 const { CocotaisBotPlugin } = require("cocotais-bot")
 
@@ -33,6 +36,28 @@ plugin.onMounted((bot) => {
 })
 
 module.exports = plugin
+```
+
+当然，插件也支持ESM模块，示例如下：
+
+plugin.mjs
+```js
+import { CocotaisBotPlugin } from "cocotais-bot"
+
+const plugin = new CocotaisBotPlugin("test-plugin","0.1.0")
+
+plugin.onMounted((bot) => {
+    console.log("Plugin mounted!")
+    plugin.on('GROUP', (data) => {
+        bot.groupApi.postMessage(data.msg.group_openid, {
+            content: "Hi",
+            msg_type: 0,
+            msg_id: data.msg.id
+        })
+    })               
+})
+
+export default plugin
 ```
 
 ## CLI 文档
