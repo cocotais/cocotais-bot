@@ -4,23 +4,33 @@ import { GetWsParam, Config, IOpenAPI } from 'qq-bot-sdk';
 import EventEmitter from 'events';
 import plugin, { CocotaisBotPlugin } from './plugin';
 
+interface PluginStaged {
+    id: number,
+    config: {
+        name: string,
+        version: string
+    },
+    path: string,
+    pluginObject: CocotaisBotPlugin
+}
+
+interface CommandStaged {
+    id: number,
+    provider: PluginStaged["id"] | -1,
+    match: string | RegExp,
+    handler: (context: IOpenAPI) => void
+}
+
 interface Stage {
     botObject: {
         bot: IOpenAPI | null,
         ws: EventEmitter | null
     },
-    plugin: {
-        id: number,
-        config: {
-            name: string,
-            version: string
-        },
-        path: string,
-        pluginObject: CocotaisBotPlugin
-    }[]
+    plugin: PluginStaged[],
+    commands: CommandStaged[]
 }
 
-export let globalStage: Stage = { botObject: { bot: null, ws: null }, plugin: [] }
+export let globalStage: Stage = { botObject: { bot: null, ws: null }, plugin: [], commands: [] }
 
 export { CocotaisBotPlugin }
 
