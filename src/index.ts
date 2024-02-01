@@ -1,34 +1,8 @@
 import fse from 'fs-extra'
 import { startBot } from './start'
-import { GetWsParam, Config, IOpenAPI } from 'qq-bot-sdk';
-import EventEmitter from 'events';
+import { GetWsParam, Config } from 'qq-bot-sdk';
 import plugin, { CocotaisBotPlugin } from './plugin';
-
-interface PluginStaged {
-    id: number,
-    config: {
-        name: string,
-        version: string
-    },
-    path: string,
-    pluginObject: CocotaisBotPlugin
-}
-
-interface CommandStaged {
-    id: number,
-    provider: PluginStaged["id"] | -1,
-    match: string | RegExp,
-    handler: (context: IOpenAPI, msgs: string[]) => void
-}
-
-interface Stage {
-    botObject: {
-        bot: IOpenAPI | null,
-        ws: EventEmitter | null
-    },
-    plugin: PluginStaged[],
-    commands: CommandStaged[]
-}
+import { Stage } from './types';
 
 export let globalStage: Stage = { botObject: { bot: null, ws: null }, plugin: [], commands: [] }
 

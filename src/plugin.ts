@@ -1,6 +1,6 @@
 import EventEmitter from "events";
 import { IOpenAPI } from "qq-bot-sdk";
-import { events } from "./bot";
+import { events } from "./types";
 import { globalStage } from ".";
 import fse from 'fs-extra'
 
