@@ -2,6 +2,7 @@ import { IOpenAPI } from "qq-bot-sdk";
 import { EventEmitter } from "events";
 import { globalStage } from ".";
 import { events, messageEvents } from "./types";
+import { CocotaisBotPlugin } from "./plugin";
 
 function keepAlive() {
     process.send!({
@@ -55,11 +56,19 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter) {
     messageEvents.forEach(event => {
         ws.on(event, (data) => {
             globalStage.commands.forEach((cmd) => {
-                if(typeof cmd.match == 'string') cmd.match = new RegExp(cmd.match)
-                if (cmd.match.test(data.msg.content)) {
-                    cmd.handler(context, data.msg.content.trim().split(" "))
+                if (data.msg.content.startsWith(cmd.match)) {
+                    cmd.handler(context, data.msg.content.trim().split(" "), data.msg)
                 }
             })
+        })
+    })
+
+    CocotaisBotPlugin.prototype.command.register('/help', '查看帮助', (context, args, event) => {
+        context.groupApi.postMessage(event.group_id, {
+            content: '帮助信息: \n' + globalStage.commands.map((cmd) => {
+                return `${cmd.match} - ${cmd.provider}`
+            }).join('\n'),
+            msg_type: 0
         })
     })
 }

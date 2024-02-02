@@ -231,10 +231,10 @@ export class CocotaisBotPlugin extends EventEmitter {
          * @param fun 命令执行器
          * @returns 命令ID
          */
-        register(match: string | RegExp, desc: string, fun: (context: IOpenAPI, msgs: string[]) => void) {
+        register(match: string, desc: string, fun: (context: IOpenAPI, msgs: string[], event: any) => void) {
             globalStage.commands.push({
                 id: globalStage.plugin.length,
-                provider: this.id,
+                provider: desc,
                 match: match,
                 handler: fun
             })
