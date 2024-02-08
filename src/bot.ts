@@ -68,7 +68,8 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter) {
             content: '帮助信息: \n' + globalStage.commands.map((cmd) => {
                 return `${cmd.match} - ${cmd.provider}`
             }).join('\n'),
-            msg_type: 0
+            msg_type: 0,
+            msg_id: event.id
         })
     })
 }
