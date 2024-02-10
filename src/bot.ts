@@ -3,6 +3,7 @@ import { EventEmitter } from "events";
 import { globalStage } from ".";
 import { events, messageEvents } from "./types";
 import { CocotaisBotPlugin } from "./plugin";
+import { getBuiltinPlugins } from "./builtins";
 
 function keepAlive() {
     process.send!({
@@ -57,19 +58,14 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter) {
         ws.on(event, (data) => {
             globalStage.commands.forEach((cmd) => {
                 if (data.msg.content.startsWith(cmd.match)) {
-                    cmd.handler(context, data.msg.content.trim().split(" "), data.msg)
+                    cmd.handler(data.msg.content.trim().split(" "), data)
                 }
             })
         })
     })
 
-    CocotaisBotPlugin.prototype.command.register('/help', '查看帮助', (context, args, event) => {
-        context.groupApi.postMessage(event.group_id, {
-            content: '帮助信息: \n' + globalStage.commands.map((cmd) => {
-                return `${cmd.match} - ${cmd.provider}`
-            }).join('\n'),
-            msg_type: 0,
-            msg_id: event.id
-        })
+    getBuiltinPlugins().forEach((plugin) => {
+        plugin.enableBot(context, ws, globalStage.plugin.length)
     })
+
 }

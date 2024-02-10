@@ -28,7 +28,7 @@ export interface CommandStaged {
     id: number,
     provider: string,
     match: string,
-    handler: (context: IOpenAPI, msgs: string[], event: any) => void
+    handler: (msgs: string[], event: any) => void
 }
 
 export interface Stage {

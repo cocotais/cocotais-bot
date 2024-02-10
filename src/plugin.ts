@@ -192,6 +192,7 @@ export class CocotaisBotPlugin extends EventEmitter {
      */
     disableBot() {
         this.removeAllHandler();
+        globalStage.commands = []
         try { this._unmount() } catch (e) { console.error('Plugin unmount error:' + String(e)) }
         this.botWs = null
         this.botContext = null
@@ -236,7 +237,7 @@ export class CocotaisBotPlugin extends EventEmitter {
          * @param fun 命令执行器
          * @returns 命令ID
          */
-        register(match: string, desc: string, fun: (context: IOpenAPI, msgs: string[], event: any) => void) {
+        register(match: string, desc: string, fun: (msgs: string[], event: any) => void) {
             globalStage.commands.push({
                 id: globalStage.plugin.length,
                 provider: desc,
