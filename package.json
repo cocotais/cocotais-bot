@@ -27,6 +27,7 @@
   "license": "Apache-2.0",
   "types": "./lib/index.d.ts",
   "devDependencies": {
-    "@types/fs-extra": "^11.0.4"
+    "@types/fs-extra": "^11.0.4",
+    "@types/ws": "^8.5.10"
   }
 }
