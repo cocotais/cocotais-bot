@@ -118,7 +118,7 @@ async function reloadPlugin(id: number) {
 }
 
 export interface CocotaisBotPlugin {
-    on(event: keyof EventList, listener: Function): this;
+    on<T extends keyof EventList>(event: T, listener: (arg: EventList[T]) => void): this;
 }
 
 /**
