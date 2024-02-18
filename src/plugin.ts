@@ -1,6 +1,6 @@
 import EventEmitter from "events";
 import { IOpenAPI } from "qq-bot-sdk";
-import { AllEvents, events } from "./types";
+import { EventList, events } from "./types";
 import { globalStage } from ".";
 import fse from 'fs-extra'
 
@@ -118,7 +118,7 @@ async function reloadPlugin(id: number) {
 }
 
 export interface CocotaisBotPlugin {
-    on(event: AllEvents, listener: Function): this;
+    on(event: keyof EventList, listener: Function): this;
 }
 
 /**
