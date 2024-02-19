@@ -51,16 +51,13 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter) {
     events.forEach(event => {
         ws.on(event, (data) => {
             console.log(`[${event}] 事件接收 :`, data);
-        })
-    })
-
-    messageEvents.forEach(event => {
-        ws.on(event, (data) => {
-            globalStage.commands.forEach((cmd) => {
-                if (data.msg.content.startsWith(cmd.match)) {
-                    cmd.handler(data.msg.content.trim().split(" "), data)
-                }
-            })
+            if(messageEvents.includes(data.eventType)){
+                globalStage.commands.forEach((cmd) => {
+                    if (data.msg.content.startsWith(cmd.match)) {
+                        cmd.handler(data.msg.content.trim().split(" "), data)
+                    }
+                })
+            }
         })
     })
 

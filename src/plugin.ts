@@ -176,7 +176,7 @@ export class CocotaisBotPlugin extends EventEmitter {
         this.events.forEach((evt) => {
             const handler = (e: WsResponse<any>) => {
 
-                this.emit(evt, e.eventType);
+                this.emit(e.eventType, e);
 
             };
             // 插件收到事件时，将事件及数据 emit 给插件里定义的处理函数
