@@ -53,7 +53,7 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter) {
             console.log(`[${event}] 事件接收 :`, data);
             if(messageEvents.includes(data.eventType)){
                 globalStage.commands.forEach((cmd) => {
-                    if (data.msg.content.startsWith(cmd.match)) {
+                    if (data.msg.content.trim().startsWith(cmd.match)) {
                         cmd.handler(data.msg.content.trim().split(" "), data)
                     }
                 })
