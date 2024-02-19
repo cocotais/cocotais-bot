@@ -174,13 +174,13 @@ export class CocotaisBotPlugin extends EventEmitter {
         try { this._mount(context) } catch (e) { console.error('Plugin execute error:' + String(e)) }
         this.command.id = this.id
         this.events.forEach((evt) => {
-            const handler = (e: any) => {
+            const handler = (e: WsResponse<any>) => {
 
-                this.emit(evt, e);
+                this.emit(evt, e.eventType);
 
             };
             // 插件收到事件时，将事件及数据 emit 给插件里定义的处理函数
-            this.botWs?.on(evt, (e: any) => {
+            this.botWs?.on(evt, (e: WsResponse<any>) => {
                 if (this.isBotEnabled()) {
                     unsafelyDo(handler, e)
                 }
@@ -201,15 +201,7 @@ export class CocotaisBotPlugin extends EventEmitter {
      * 移除所有监听器
      */
     removeAllHandler() {
-        this.events.forEach((evt) => {
-            const handler = (e: any) => {
-
-                this.emit(evt, e);
-
-            };
-            // 插件收到事件时，将事件及数据 emit 给插件里定义的处理函数
-            this.off(evt, handler);
-        });
+        this.removeAllListeners()
     }
     /**
      * 当被挂载时
