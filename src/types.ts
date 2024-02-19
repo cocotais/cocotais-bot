@@ -557,7 +557,7 @@ export interface PluginStaged {
 
 export interface CommandStaged {
     id: number,
-    provider: string,
+    description: string,
     match: string,
     handler: (msgs: string[], event: any) => void
 }

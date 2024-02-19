@@ -1,6 +1,6 @@
 import EventEmitter from "events";
 import { IOpenAPI } from "qq-bot-sdk";
-import { EventList, events } from "./types";
+import { EventList, events, WsResponse } from "./types";
 import { globalStage } from ".";
 import fse from 'fs-extra'
 
@@ -237,10 +237,10 @@ export class CocotaisBotPlugin extends EventEmitter {
          * @param fun 命令执行器
          * @returns 命令ID
          */
-        register(match: string, desc: string, fun: (msgs: string[], event: any) => void) {
+        register(match: string, desc: string, fun: (msgs: string[], event: WsResponse<any>) => void) {
             globalStage.commands.push({
                 id: globalStage.plugin.length,
-                provider: desc,
+                description: desc,
                 match: match,
                 handler: fun
             })
