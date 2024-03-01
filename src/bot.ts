@@ -12,6 +12,10 @@ function keepAlive() {
             type: 'ping',
             data: 'ping'
         }
+    },undefined,undefined,(err)=>{
+        if (err) {
+            console.error("[WARN(001)] 发送保活消息失败，可能无法正常操控机器人")
+        }
     })
 }
 
@@ -24,7 +28,7 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter) {
     keepAlive()
     ws.on('READY', (data) => {
         console.log('[READY] 已连接到服务器' + data);
-        if (!process.send) console.log('[ERROR] Not IPC Channel')
+        if (!process.send) console.error("[ERR(002)] 不是有效的IPC通道")
         keepAlive()
         process.send!({
             type: 'process:msg',
@@ -35,8 +39,8 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter) {
         })
     });
     ws.on('DEAD', (data) => {
-        console.log('[ERROR] 连接到服务器失败 :', data);
-        if (!process.send) console.log('[ERROR] Not IPC Channel')
+        console.log('[ERR(010)] 连接到服务器失败 :', data);
+        if (!process.send) console.error("[ERR(002)] 不是有效的IPC通道")
         keepAlive()
         process.send!({
             type: 'process:msg',

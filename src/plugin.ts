@@ -8,7 +8,7 @@ function unsafelyDo(func: Function, ...args: any) {
     try {
         func(...args)
     } catch (e) {
-
+        console.error("[WARN(003)] 不安全的执行抛出了错误")
     }
 }
 
@@ -22,7 +22,7 @@ function autoloadPlugin() {
         return true
     }
     catch (e) {
-        console.error('Autoload plugin error:' + String(e))
+        console.error("[ERR(004)] 自动加载插件出现错误：" + typeof e == "object" ? JSON.stringify(e) : String(e))
         return false
     }
 }
@@ -43,10 +43,10 @@ async function applyPlugin(path: string, bot: IOpenAPI, ws: EventEmitter) {
             data: null
         }
     } catch (e) {
-        console.error('Plugin load error:' + String(e))
+        console.error("[ERR(005)] 应用插件出现错误：" + typeof e == "object" ? JSON.stringify(e) : String(e))
         return {
             success: false,
-            data: String(e)
+            data: typeof e == "object" ? JSON.stringify(e) : String(e)
         }
     }
 }
@@ -67,10 +67,10 @@ function removePlugin(id: number) {
             data: null
         }
     } catch (e) {
-        console.error('Plugin remove error:' + String(e))
+        console.error("[ERR(006)] 卸载插件出现错误：" + typeof e == "object" ? JSON.stringify(e) : String(e))
         return {
             success: false,
-            data: String(e)
+            data: typeof e == "object" ? JSON.stringify(e) : String(e)
         }
     }
 }
@@ -88,13 +88,14 @@ async function reloadPlugin(id: number) {
                         data: null
                     }
                 else {
+                    console.error("[ERR(007)] 重载插件(装载时)出现错误：" + apply.data)
                     return {
                         success: false,
                         data: 'Plugin apply error.' + apply.data
                     }
                 }
             } else {
-                console.log('Bot is not enabled.')
+                console.error("[ERR(008)] 重载插件(卸载时)出现错误：机器人未运行")
                 return {
                     success: false,
                     data: 'Bot is not enabled.'
@@ -102,6 +103,7 @@ async function reloadPlugin(id: number) {
             }
         }
         else {
+            console.error("[ERR(008)] 重载插件(卸载时)出现错误："+ remove.data)
             return {
                 success: false,
                 data: 'Plugin remove error.' + remove.data
@@ -109,10 +111,10 @@ async function reloadPlugin(id: number) {
         }
 
     } catch (e) {
-        console.error('Plugin reload error:' + String(e))
+        console.error("[ERR(009)] 重载插件出现错误："+ typeof e == "object" ? JSON.stringify(e) : String(e))
         return {
             success: false,
-            data: String(e)
+            data: typeof e == "object" ? JSON.stringify(e) : String(e)
         }
     }
 }
@@ -171,7 +173,7 @@ export class CocotaisBotPlugin extends EventEmitter {
         this.botContext = context
         this.botWs = ws
         this.id = botId
-        try { this._mount(context) } catch (e) { console.error('Plugin execute error:' + String(e)) }
+        try { this._mount(context) } catch (e) { console.error('[ERR(005)] 应用插件出现错误(运行时)：' + typeof e == "object" ? JSON.stringify(e) : String(e)) }
         this.command.id = this.id
         this.events.forEach((evt) => {
             const handler = (e: WsResponse<any>) => {
@@ -193,7 +195,7 @@ export class CocotaisBotPlugin extends EventEmitter {
     disableBot() {
         this.removeAllHandler();
         globalStage.commands = []
-        try { this._unmount() } catch (e) { console.error('Plugin unmount error:' + String(e)) }
+        try { this._unmount() } catch (e) { console.error('[ERR(006)] 卸载插件出现错误(运行时)：' + typeof e == "object" ? JSON.stringify(e) : String(e)) }
         this.botWs = null
         this.botContext = null
     }

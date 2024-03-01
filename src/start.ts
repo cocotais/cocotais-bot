@@ -16,6 +16,10 @@ export async function startBot(options: GetWsParam & Config) {
     // 创建 websocket 连接
     const ws = createWebsocket(testConfig);
 
+    if (!client || !ws){
+        console.error("[ERR(000)] 创建机器人实例失败")
+    }
+
     globalStage.botObject.bot = client
     globalStage.botObject.ws = ws
 
