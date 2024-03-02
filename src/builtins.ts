@@ -7,7 +7,7 @@ export function getBuiltinPlugins(){
             const plugin = new CocotaisBotPlugin("builtin:help","1.0.0")
             plugin.onMounted((bot) => {
                 plugin.command.register("/help","显示帮助信息", (_msgs, event) => {
-                    if(event.eventType == 'DIRECT_MESSAGE_CREATE'){
+                    if(event.eventType == 'MESSAGE_CREATE' || event.eventType == 'AT_MESSAGE_CREATE'){
                         bot.messageApi.postMessage(event.msg.channel_id, {
                             content: '帮助信息: \n' + globalStage.commands.map((cmd) => {
                                 return `${cmd.match} - ${cmd.description}`
