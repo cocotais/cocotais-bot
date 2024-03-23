@@ -114,8 +114,14 @@ if (process.argv[2] == "start") {
             }
             else if (packet.data.type == 'login.error') {
                 console.log('[后台进程] 登录失败：' + JSON.stringify(packet.data.data))
-                cleanBot(name)
-
+                if (process.argv[3] != '--no-killbot') {
+                    console.log("[守护进程] 设置了不结束机器人进程，直接退出。")
+                    pm2.disconnect()
+                    process.exit()
+                }
+                else{
+                    cleanBot(name)
+                }
             }
             else if (packet.data.type == 'plugin.autoload.success') {
                 console.log('[后台进程] 插件已自动装载')
