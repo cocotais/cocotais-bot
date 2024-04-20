@@ -35,7 +35,7 @@ if (process.argv[2] == "start") {
                 process.exit()
             }
             if (list.length != 0) {
-                console.log("[守护进行] PM2有其余运行进程。当前版本仅支持独占PM2运行。")
+                console.log("[守护进程] PM2有其余运行进程。当前版本仅支持独占PM2运行。")
                 pm2.disconnect()
                 process.exit()
             }
