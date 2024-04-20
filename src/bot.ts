@@ -39,7 +39,7 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter) {
         })
     });
     ws.on('DEAD', (data) => {
-        console.log('[ERR(010)] 连接到服务器失败 :', data);
+        console.error('[ERR(010)] 连接到服务器失败 :', data);
         if (!process.send) console.error("[ERR(002)] 不是有效的IPC通道")
         keepAlive()
         process.send!({
@@ -49,7 +49,6 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter) {
                 data: data
             }
         })
-        throw new Error(data);
     });
 
     events.forEach(event => {
