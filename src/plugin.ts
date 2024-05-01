@@ -189,7 +189,7 @@ export class CocotaisBotPlugin extends EventEmitter {
         this.botWs = ws
         this.id = botId
         try { this._mount(context) } catch (e) { console.error('[ERR(005)] 应用插件出现错误(运行时)：' + typeof e == "object" ? JSON.stringify(e) : String(e)) }
-        this.command.id = this.id
+        this.command.name = this.config.name
         if (this.config.name.startsWith("builtin:")){
             pushPluginOnly(this, "builtin")
         }
@@ -212,7 +212,8 @@ export class CocotaisBotPlugin extends EventEmitter {
      */
     disableBot() {
         this.removeAllHandler();
-        globalStage.commands = []
+        // 移除provider是本插件的命令
+        globalStage.commands = globalStage.commands.filter((v) => v.provider != this.config.name)
         try { this._unmount() } catch (e) { console.error('[ERR(006)] 卸载插件出现错误(运行时)：' + typeof e == "object" ? JSON.stringify(e) : String(e)) }
         this.botWs = null
         this.botContext = null
@@ -241,7 +242,7 @@ export class CocotaisBotPlugin extends EventEmitter {
      * 插件命令
      */
     command = {
-        id: -1,
+        name: "",
         /**
          * 注册一个命令
          * @param match 命令匹配器
@@ -254,6 +255,7 @@ export class CocotaisBotPlugin extends EventEmitter {
                 id: globalStage.plugin.length,
                 description: desc,
                 match: match,
+                provider: this.name,
                 handler: fun
             })
             return globalStage.plugin.length - 1;

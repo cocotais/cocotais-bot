@@ -559,6 +559,7 @@ export interface CommandStaged {
     id: number,
     description: string,
     match: string,
+    provider: string,
     handler: (msgs: string[], event: any) => void
 }
 
