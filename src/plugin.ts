@@ -251,6 +251,10 @@ export class CocotaisBotPlugin extends EventEmitter {
          * @returns 命令ID
          */
         register(match: string, desc: string, fun: (msgs: string[], event: WsResponse) => void) {
+            console.warn("Not implemented yet.")
+            return -1;
+            /*
+            TODO: 完成命令系统
             globalStage.commands.push({
                 id: globalStage.plugin.length,
                 description: desc,
@@ -259,6 +263,7 @@ export class CocotaisBotPlugin extends EventEmitter {
                 handler: fun
             })
             return globalStage.plugin.length - 1;
+            */
         },
         /**
          * 卸载一个命令
