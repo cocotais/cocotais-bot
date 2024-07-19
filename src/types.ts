@@ -203,6 +203,35 @@ interface ReactionEvent {
         id: string
     }
 }
+
+interface InteractionEvent {
+    id: string,
+    scene: 'c2c' | 'group' | 'guild'
+    time: string,
+    guild?: {
+        id: string
+    },
+    channel?: {
+        id: string
+    },
+    user?: {
+        id: string
+    },
+    group?: {
+        id: string
+    },
+    interaction: {
+        type: 'button' | 'menu',
+        button?: {
+            data: string,
+            id: string
+        },
+        feature?: string,
+        id?: string,
+        version: 1,
+        bot_id: string
+    }
+}
 export type EventList = {
     'guild.add': GuildEvent,
     'guild.update': GuildEvent,
@@ -242,7 +271,7 @@ export type EventList = {
     'friend.add': UserEvent,
     'friend.delete': UserEvent,
 
-    'interaction': any,
+    'interaction': InteractionEvent,
 
     'forum.thread': any,
     'forum.thread.create': any,
