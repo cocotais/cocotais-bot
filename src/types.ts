@@ -3,21 +3,79 @@ import { CocotaisBotPlugin } from "./plugin"
 import { EventEmitter } from "ws"
 
 export const events = ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE', 'FORUMS_EVENT', 'AUDIO_ACTION', 'PUBLIC_GUILD_MESSAGES', 'MESSAGE_AUDIT', 'INTERACTION', 'GROUP_AND_C2C_EVENT']
+
 export function translateWsEvent<T extends keyof EventList>(event: string, resp: WsResponse): Array<{event: T, resp: EventList[T]}> {
     let ans: Array<{event: T, resp: EventList[T]}> = [];
     // TODO: finish translate
     return ans;
 }
+
+interface GuildEvent {
+    guild: {
+        name: string,
+        description: string,
+        icon: string,
+        id: string,
+        members: {
+            count: number,
+            max: number
+        },
+        owner: {
+            id: string
+        }
+    },
+    user: {
+        id: string,
+        join_time: string
+    }
+}
+
+interface ChannelEvent {
+    guild: {
+        id: string
+    },
+    channel: {
+        id: string,
+        name: string,
+        type: 'text' | 'audio' | 'channel_group' | 'live' | 'app' | 'forum',
+        sub_type?: '闲聊' | '公告' | '攻略' | '开黑',
+        owner: {
+            id: string
+        }
+    },
+    user: {
+        id: string
+    }
+}
+
+interface GuildMemberEvent {
+    guild: {
+        id: string
+    },
+    member: {
+        nickname: string,
+        roles: string[],
+        avatar: string,
+        id: string,
+        username: string,
+        bot: boolean,
+        join_time: string
+    },
+    user: {
+        id: string
+    }
+}
+
 export type EventList = {
-    'guild.add': any,
-    'guild.update': any,
-    'guild.delete': any,
-    'guild.channel.add': any,
-    'guild.channel.update': any,
-    'guild.channel.delete': any,
-    'guild.member.add': any,
-    'guild.member.update': any,
-    'guild.member.remove': any,
+    'guild.add': GuildEvent,
+    'guild.update': GuildEvent,
+    'guild.delete': GuildEvent,
+    'guild.channel.add': ChannelEvent,
+    'guild.channel.update': ChannelEvent,
+    'guild.channel.delete': ChannelEvent,
+    'guild.member.add': GuildMemberEvent,
+    'guild.member.update': GuildMemberEvent,
+    'guild.member.remove': GuildMemberEvent,
 
     'group.add': any,
     'group.del': any
