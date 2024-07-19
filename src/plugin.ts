@@ -1,6 +1,6 @@
 import EventEmitter from "events";
 import { IOpenAPI } from "qq-bot-sdk";
-import { EventList, events, WsResponse } from "./types";
+import { EventList, events, translateWsEvent, WsResponse } from "./types";
 import { globalStage } from ".";
 import fse from 'fs-extra'
 
@@ -140,6 +140,7 @@ async function reloadPlugin(id: number) {
 
 export interface CocotaisBotPlugin {
     on<T extends keyof EventList>(event: T, listener: (arg: EventList[T]) => void): this;
+    emit<T extends keyof EventList>(event: T, argument: EventList[T]): boolean;
 }
 
 /**
@@ -199,9 +200,10 @@ export class CocotaisBotPlugin extends EventEmitter {
         }
         this.events.forEach((evt) => {
             const handler = (e: WsResponse) => {
-
-                this.emit(e.eventType, e);
-
+                let data = translateWsEvent(e.eventType, e)
+                data.forEach(e => {
+                    this.emit(e.event, e.resp)
+                })
             };
             // 插件收到事件时，将事件及数据 emit 给插件里定义的处理函数
             this.botWs?.on(evt, (e: WsResponse) => {
