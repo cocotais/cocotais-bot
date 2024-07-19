@@ -66,6 +66,16 @@ interface GuildMemberEvent {
     }
 }
 
+interface GroupEvent {
+    time: number,
+    group: {
+        id: string
+    },
+    user: {
+        id: string
+    }
+}
+
 export type EventList = {
     'guild.add': GuildEvent,
     'guild.update': GuildEvent,
@@ -77,8 +87,8 @@ export type EventList = {
     'guild.member.update': GuildMemberEvent,
     'guild.member.remove': GuildMemberEvent,
 
-    'group.add': any,
-    'group.del': any
+    'group.add': GroupEvent,
+    'group.del': GroupEvent
 
     'message': any,
     'message.guild': any,
