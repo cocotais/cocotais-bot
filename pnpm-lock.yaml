@@ -9,7 +9,7 @@ dependencies:
     specifier: ^5.3.0
     version: 5.4.1
   qq-bot-sdk:
-    specifier: ^1.4.1
+    specifier: ^1.6.2
     version: 1.6.2
 
 devDependencies:
