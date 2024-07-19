@@ -294,6 +294,32 @@ interface ReplyEvent {
     }
 }
 
+interface ForumAuditEvent {
+    guild: {
+        id: string
+    },
+    channel: {
+        id: string
+    },
+    thread?: {
+        id: string
+    },
+    post?: {
+        id: string
+    },
+    reply?: {
+        id: string
+    },
+    user: {
+        id: string
+    },
+    audit: {
+        type: 'thread' | 'post' | 'reply',
+        pass: boolean,
+        reason?: string
+    }
+}
+
 export type EventList = {
     'guild.add': GuildEvent,
     'guild.update': GuildEvent,
@@ -309,13 +335,13 @@ export type EventList = {
     'group.del': GroupEvent
 
     'message': GuildMessageEvent | C2cMessageEvent | GroupMessageEvent,
-    'message.delete': any, /** Missing docs */
+    //'message.delete': any, /** Missing docs */
     'message.guild': GuildMessageEvent,
-    'message.guild.delete': any, /** Missing docs */
+    //'message.guild.delete': any, /** Missing docs */
     'message.guild.public': GuildMessageEvent,
-    'message.guild.public.delete': any, /** Missing docs */
+    //'message.guild.public.delete': any, /** Missing docs */
     'message.direct': GuildMessageEvent,
-    'message.direct.delete': any, /** Missing docs */
+    //'message.direct.delete': any, /** Missing docs */
     'message.c2c': C2cMessageEvent,
     'message.c2c.reject': UserEvent,
     'message.c2c.receive': UserEvent,
@@ -328,7 +354,7 @@ export type EventList = {
 
     'reaction': ReactionEvent,
     'reaction.guild': ReactionEvent,
-    'reaction.guild.delete': any, /** Missing docs */
+    //'reaction.guild.delete': any, /** Missing docs */
 
     'friend.add': UserEvent,
     'friend.delete': UserEvent,
@@ -345,12 +371,15 @@ export type EventList = {
     'forum.reply.create': ReplyEvent,
     'forum.reply.delete': ReplyEvent,
 
-    'forum.publish.result': any,
+    'forum.publish.result': ForumAuditEvent,
 
+    /*
+    // Not implemented yet. Missing docs.
     'audio.start': any,
     'audio.finish': any,
     'audio.mic.on': any,
     'audio.mic.off': any
+    */
 }
 
 interface BaseRespMessage {
