@@ -273,16 +273,13 @@ export type EventList = {
 
     'interaction': InteractionEvent,
 
-    'forum.thread': any,
     'forum.thread.create': any,
     'forum.thread.update': any,
     'forum.thread.delete': any,
 
-    'forum.post': any,
     'forum.post.create': any,
     'forum.post.delete': any,
 
-    'forum.reply': any,
     'forum.reply.create': any,
     'forum.reply.delete': any,
 
