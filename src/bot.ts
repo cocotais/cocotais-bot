@@ -1,8 +1,7 @@
 import { IOpenAPI } from "qq-bot-sdk";
 import { EventEmitter } from "events";
 import { globalStage } from ".";
-import { EventList, WsResponse, events, messageEvents } from "./types";
-import { CocotaisBotPlugin } from "./plugin";
+import { WsResponse, events } from "./types";
 import { getBuiltinPlugins } from "./builtins";
 
 function keepAlive() {
@@ -52,8 +51,10 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter) {
     });
 
     events.forEach(event => {
-        ws.on(event, (data: WsResponse<any>) => {
+        ws.on(event, (data: WsResponse) => {
             console.log(`[${event}] 事件接收 :`, data);
+            /*
+            TODO: 添加命令处理
             if(messageEvents.includes(data.eventType)){
                 globalStage.commands.forEach((cmd) => {
                     if (data.msg.content.trim().startsWith(cmd.match)) {
@@ -61,6 +62,7 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter) {
                     }
                 })
             }
+            */
         })
     })
 

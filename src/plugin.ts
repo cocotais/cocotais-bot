@@ -177,7 +177,7 @@ export class CocotaisBotPlugin extends EventEmitter {
      * @returns ```true```或```false```
      */
     isBotEnabled() {
-        return (this.botContext == null || this.botWs == null) ? false : true
+        return !((this.botContext == null || this.botWs == null))
     }
     /**
      * 启用机器人
@@ -194,13 +194,13 @@ export class CocotaisBotPlugin extends EventEmitter {
             pushPluginOnly(this, "builtin")
         }
         this.events.forEach((evt) => {
-            const handler = (e: WsResponse<any>) => {
+            const handler = (e: WsResponse) => {
 
                 this.emit(e.eventType, e);
 
             };
             // 插件收到事件时，将事件及数据 emit 给插件里定义的处理函数
-            this.botWs?.on(evt, (e: WsResponse<any>) => {
+            this.botWs?.on(evt, (e: WsResponse) => {
                 if (this.isBotEnabled()) {
                     unsafelyDo(handler, e)
                 }
@@ -250,7 +250,7 @@ export class CocotaisBotPlugin extends EventEmitter {
          * @param fun 命令执行器
          * @returns 命令ID
          */
-        register(match: string, desc: string, fun: (msgs: string[], event: WsResponse<any>) => void) {
+        register(match: string, desc: string, fun: (msgs: string[], event: WsResponse) => void) {
             globalStage.commands.push({
                 id: globalStage.plugin.length,
                 description: desc,
