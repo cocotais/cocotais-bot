@@ -1,5 +1,9 @@
 <div align="center"><a name="readme-top"></a>
 
+> WARNING: 此版本(1.5.0-test*)并非稳定版本，仅用于测试，勿用于生产环境。
+>
+> 请使用稳定版本[1.4.3](https://www.npmjs.com/package/cocotais-bot/v/1.4.3)
+
 <img height="160" src="https://static.codemao.cn/coco/player/unstable/ryYpO7wja.image/png?hash=Fk5MB4bIWWoeu5uaE4GQ2VJM0L3o">
 
 <h1>Cocotais Bot</h1>
