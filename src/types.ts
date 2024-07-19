@@ -4,8 +4,8 @@ import { EventEmitter } from "ws"
 
 export const events = ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE', 'FORUMS_EVENT', 'AUDIO_ACTION', 'PUBLIC_GUILD_MESSAGES', 'MESSAGE_AUDIT', 'INTERACTION', 'GROUP_AND_C2C_EVENT']
 
-export function translateWsEvent<T extends keyof EventList>(event: string, resp: WsResponse): Array<{event: T, resp: EventList[T]}> {
-    let ans: Array<{event: T, resp: EventList[T]}> = [];
+export function translateWsEvent<T extends keyof EventList>(event: string, resp: WsResponse): Array<{ event: T, resp: EventList[T] }> {
+    let ans: Array<{ event: T, resp: EventList[T] }> = [];
     // TODO: finish translate
     return ans;
 }
@@ -76,6 +76,96 @@ interface GroupEvent {
     }
 }
 
+interface UserEvent {
+    time: number,
+    user: {
+        id: string
+    }
+}
+
+interface Attachment {
+    content_type?: string,
+    filename?: string,
+    height?: string,
+    width?: string,
+    size?: string,
+    url: string
+}
+
+interface Embed {
+    title: string,
+    prompt: string,
+    thumbnail?: {
+        url: string
+    },
+    fields?: {
+        name: string
+    }[]
+}
+
+interface Reference {
+    message_id: string
+}
+
+interface C2cMessageEvent {
+    id: string,
+    user: {
+        id: string
+    },
+    message: {
+        content: string,
+        attachments?: Attachment[],
+    },
+    time: string
+}
+
+interface GroupMessageEvent {
+    id: string,
+    user: {
+        id: string
+    },
+    group: {
+        id: string
+    }
+    message: {
+        content: string,
+        attachments?: Attachment[],
+    },
+    time: string
+}
+
+interface GuildMessageEvent {
+    id: string,
+    user: {
+        roles: string[],
+        avatar: string,
+        id: string,
+        username: string,
+        bot: boolean,
+        join_time: string
+    },
+    guild: {
+        id: string
+    },
+    channel: {
+        id: string
+    },
+    message: {
+        content: string,
+        attachments?: Attachment[],
+        embeds?: Embed[],
+        mentions?: {
+            avatar: string,
+            id: string,
+            username: string,
+            bot: boolean,
+        }[],
+        reference?: Reference,
+        mention_everyone: boolean
+    },
+    time: string,
+    edited_time?: string
+}
 export type EventList = {
     'guild.add': GuildEvent,
     'guild.update': GuildEvent,
@@ -90,17 +180,20 @@ export type EventList = {
     'group.add': GroupEvent,
     'group.del': GroupEvent
 
-    'message': any,
-    'message.guild': any,
-    'message.guild.delete': any,
-    'message.guild.public': any,
-    'message.guild.public.delete': any,
-    'message.c2c': any,
-    'message.c2c.reject': any,
-    'message.c2c.receive': any,
-    'message.group': any,
-    'message.group.reject': any,
-    'message.group.receive': any,
+    'message': GuildMessageEvent | C2cMessageEvent | GroupMessageEvent,
+    'message.delete': any, /** Missing docs */
+    'message.guild': GuildMessageEvent,
+    'message.guild.delete': any, /** Missing docs */
+    'message.guild.public': GuildMessageEvent,
+    'message.guild.public.delete': any, /** Missing docs */
+    'message.direct': GuildMessageEvent,
+    'message.direct.delete': any, /** Missing docs */
+    'message.c2c': C2cMessageEvent,
+    'message.c2c.reject': UserEvent,
+    'message.c2c.receive': UserEvent,
+    'message.group': GroupMessageEvent,
+    'message.group.reject': GroupEvent,
+    'message.group.receive': GroupEvent,
 
     'message.audit.pass': any,
     'message.audit.reject': any,
@@ -109,8 +202,8 @@ export type EventList = {
     'reaction.guild': any,
     'reaction.guild.delete': any,
 
-    'friend.add': any,
-    'friend.delete': any,
+    'friend.add': UserEvent,
+    'friend.delete': UserEvent,
 
     'interaction': any,
 
