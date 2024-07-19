@@ -166,6 +166,43 @@ interface GuildMessageEvent {
     time: string,
     edited_time?: string
 }
+
+interface MessageAuditEvent<P extends boolean> {
+    message: {
+        audit_id: string,
+        message_id: P extends true ? string : undefined,
+    },
+    guild: {
+        id: string
+    },
+    channel: {
+        id: string
+    },
+    time: {
+        audit: string,
+        create: string
+    }
+}
+
+interface ReactionEvent {
+    user: {
+        id: string
+    },
+    guild: {
+        id: string
+    },
+    channel: {
+        id: string
+    },
+    target: {
+        id: string,
+        type: 'message' | 'thread' | 'post' | 'reply'
+    },
+    reaction: {
+        type: 'system' | 'emoji',
+        id: string
+    }
+}
 export type EventList = {
     'guild.add': GuildEvent,
     'guild.update': GuildEvent,
@@ -195,12 +232,12 @@ export type EventList = {
     'message.group.reject': GroupEvent,
     'message.group.receive': GroupEvent,
 
-    'message.audit.pass': any,
-    'message.audit.reject': any,
+    'message.audit.pass': MessageAuditEvent<true>,
+    'message.audit.reject': MessageAuditEvent<false>,
 
-    'reaction': any,
-    'reaction.guild': any,
-    'reaction.guild.delete': any,
+    'reaction': ReactionEvent,
+    'reaction.guild': ReactionEvent,
+    'reaction.guild.delete': any, /** Missing docs */
 
     'friend.add': UserEvent,
     'friend.delete': UserEvent,
