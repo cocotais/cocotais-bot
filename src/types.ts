@@ -232,6 +232,68 @@ interface InteractionEvent {
         bot_id: string
     }
 }
+
+interface ThreadEvent {
+    guild: {
+        id: string
+    },
+    channel: {
+        id: string
+    },
+    user: {
+        id: string
+    },
+    thread: {
+        id: string,
+        title: string,
+        content: string,
+        time: string
+    }
+}
+
+interface PostEvent {
+    guild: {
+        id: string
+    },
+    channel: {
+        id: string
+    },
+    user: {
+        id: string
+    },
+    thread: {
+        id: string
+    }
+    post: {
+        id: string,
+        content: string,
+        time: string
+    }
+}
+
+interface ReplyEvent {
+    guild: {
+        id: string
+    },
+    channel: {
+        id: string
+    },
+    user: {
+        id: string
+    },
+    thread: {
+        id: string
+    },
+    post: {
+        id: string
+    },
+    reply: {
+        id: string,
+        content: string,
+        time: string
+    }
+}
+
 export type EventList = {
     'guild.add': GuildEvent,
     'guild.update': GuildEvent,
@@ -273,15 +335,15 @@ export type EventList = {
 
     'interaction': InteractionEvent,
 
-    'forum.thread.create': any,
-    'forum.thread.update': any,
-    'forum.thread.delete': any,
+    'forum.thread.create': ThreadEvent,
+    'forum.thread.update': ThreadEvent,
+    'forum.thread.delete': ThreadEvent,
 
-    'forum.post.create': any,
-    'forum.post.delete': any,
+    'forum.post.create': PostEvent,
+    'forum.post.delete': PostEvent,
 
-    'forum.reply.create': any,
-    'forum.reply.delete': any,
+    'forum.reply.create': ReplyEvent,
+    'forum.reply.delete': ReplyEvent,
 
     'forum.publish.result': any,
 
