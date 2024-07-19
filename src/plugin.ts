@@ -40,9 +40,11 @@ async function applyPlugin(path: string, bot: IOpenAPI, ws: EventEmitter) {
     try {
         const pluginModule = await import(path);
         const plugin: CocotaisBotPlugin = pluginModule.default;
+        /*
         if (plugin.config.name.startsWith("builtin")){
             console.error("[ERR(005)] 应用插件出现错误：插件名称非法，无法应用")
         }
+        */
         plugin.enableBot(bot, ws, globalStage.plugin.length);
         globalStage.plugin.push({
             id: globalStage.plugin.length,
@@ -67,9 +69,11 @@ async function applyPlugin(path: string, bot: IOpenAPI, ws: EventEmitter) {
 function removePlugin(id: number) {
     try {
         let path = globalStage.plugin[id].path
+        /*
         if(path == "builtin"){
             console.error("[ERR(006)] 卸载插件出现错误：插件内置，无法卸载")
         }
+        */
         globalStage.plugin[id].pluginObject.disableBot()
         globalStage.plugin.splice(id, 1)
         for (const key in require.cache) {
