@@ -589,6 +589,217 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 resp: interactionResp
             });
             break;
+        // 主题事件
+        case 'FORUM_THREAD_CREATE':
+            let threadCreateEvent: ThreadEvent = {
+                guild: {
+                    id: resp.msg.guild_id
+                },
+                channel: {
+                    id: resp.msg.channel_id
+                },
+                user: {
+                    id: resp.msg.author_id
+                },
+                thread: {
+                    id: resp.msg.thread_info.thread_id,
+                    title: resp.msg.thread_info.title || '',
+                    content: resp.msg.thread_info.content || '',
+                    time: resp.msg.thread_info.date_time
+                }
+            };
+            (ans as EventKV<'forum.thread.create'>[]).push({
+                event: 'forum.thread.create',
+                resp: threadCreateEvent
+            });
+            break;
+
+        case 'FORUM_THREAD_UPDATE':
+            let threadUpdateEvent: ThreadEvent = {
+                guild: {
+                    id: resp.msg.guild_id
+                },
+                channel: {
+                    id: resp.msg.channel_id
+                },
+                user: {
+                    id: resp.msg.author_id
+                },
+                thread: {
+                    id: resp.msg.thread_info.thread_id,
+                    title: resp.msg.thread_info.title || '',
+                    content: resp.msg.thread_info.content || '',
+                    time: resp.msg.thread_info.date_time
+                }
+            };
+            (ans as EventKV<'forum.thread.update'>[]).push({
+                event: 'forum.thread.update',
+                resp: threadUpdateEvent
+            });
+            break;
+
+        case 'FORUM_THREAD_DELETE':
+            let threadDeleteEvent: ThreadEvent = {
+                guild: {
+                    id: resp.msg.guild_id
+                },
+                channel: {
+                    id: resp.msg.channel_id
+                },
+                user: {
+                    id: resp.msg.author_id
+                },
+                thread: {
+                    id: resp.msg.thread_info.thread_id,
+                    title: resp.msg.thread_info.title || '',
+                    content: resp.msg.thread_info.content || '',
+                    time: resp.msg.thread_info.date_time
+                }
+            };
+            (ans as EventKV<'forum.thread.delete'>[]).push({
+                event: 'forum.thread.delete',
+                resp: threadDeleteEvent
+            });
+            break;
+
+        // 帖子事件
+        case 'FORUM_POST_CREATE':
+            let postCreateEvent: PostEvent = {
+                guild: {
+                    id: resp.msg.guild_id
+                },
+                channel: {
+                    id: resp.msg.channel_id
+                },
+                user: {
+                    id: resp.msg.author_id
+                },
+                thread: {
+                    id: resp.msg.post_info.thread_id
+                },
+                post: {
+                    id: resp.msg.post_info.post_id,
+                    content: resp.msg.post_info.content || '',
+                    time: resp.msg.post_info.date_time
+                }
+            };
+            (ans as EventKV<'forum.post.create'>[]).push({
+                event: 'forum.post.create',
+                resp: postCreateEvent
+            });
+            break;
+
+        case 'FORUM_POST_DELETE':
+            let postDeleteEvent: PostEvent = {
+                guild: {
+                    id: resp.msg.guild_id
+                },
+                channel: {
+                    id: resp.msg.channel_id
+                },
+                user: {
+                    id: resp.msg.author_id
+                },
+                thread: {
+                    id: resp.msg.post_info.thread_id
+                },
+                post: {
+                    id: resp.msg.post_info.post_id,
+                    content: resp.msg.post_info.content || '',
+                    time: resp.msg.post_info.date_time
+                }
+            };
+            (ans as EventKV<'forum.post.delete'>[]).push({
+                event: 'forum.post.delete',
+                resp: postDeleteEvent
+            });
+            break;
+
+        // 回复事件
+        case 'FORUM_REPLY_CREATE':
+            let replyCreateEvent: ReplyEvent = {
+                guild: {
+                    id: resp.msg.guild_id
+                },
+                channel: {
+                    id: resp.msg.channel_id
+                },
+                user: {
+                    id: resp.msg.author_id
+                },
+                thread: {
+                    id: resp.msg.reply_info.thread_id
+                },
+                post: {
+                    id: resp.msg.reply_info.post_id
+                },
+                reply: {
+                    id: resp.msg.reply_info.reply_id,
+                    content: resp.msg.reply_info.content || '',
+                    time: resp.msg.reply_info.date_time
+                }
+            };
+            (ans as EventKV<'forum.reply.create'>[]).push({
+                event: 'forum.reply.create',
+                resp: replyCreateEvent
+            });
+            break;
+
+        case 'FORUM_REPLY_DELETE':
+            let replyDeleteEvent: ReplyEvent = {
+                guild: {
+                    id: resp.msg.guild_id
+                },
+                channel: {
+                    id: resp.msg.channel_id
+                },
+                user: {
+                    id: resp.msg.author_id
+                },
+                thread: {
+                    id: resp.msg.reply_info.thread_id
+                },
+                post: {
+                    id: resp.msg.reply_info.post_id
+                },
+                reply: {
+                    id: resp.msg.reply_info.reply_id,
+                    content: resp.msg.reply_info.content || '',
+                    time: resp.msg.reply_info.date_time
+                }
+            };
+            (ans as EventKV<'forum.reply.delete'>[]).push({
+                event: 'forum.reply.delete',
+                resp: replyDeleteEvent
+            });
+            break;
+
+        // 论坛审核事件
+        case 'FORUM_PUBLISH_AUDIT_RESULT':
+            let forumAuditEvent: ForumAuditEvent = {
+                guild: {
+                    id: resp.msg.guild_id
+                },
+                channel: {
+                    id: resp.msg.channel_id
+                },
+                thread: resp.msg.thread_id ? { id: resp.msg.thread_id } : undefined,
+                post: resp.msg.post_id ? { id: resp.msg.post_id } : undefined,
+                reply: resp.msg.reply_id ? { id: resp.msg.reply_id } : undefined,
+                user: {
+                    id: resp.msg.author_id
+                },
+                audit: {
+                    type: resp.msg.type === 1 ? 'thread' : resp.msg.type === 2 ? 'post' : 'reply',
+                    pass: resp.msg.result === 0,
+                    reason: resp.msg.err_msg || undefined
+                }
+            };
+            (ans as EventKV<'forum.publish.result'>[]).push({
+                event: 'forum.publish.result',
+                resp: forumAuditEvent
+            });
+            break;
 
         default:
             console.warn('Unknown raw WebSocket event, skipping...')
