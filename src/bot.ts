@@ -65,11 +65,10 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter) {
             */
         })
     })
-    /*
-    TODO: 修内置插件
     getBuiltinPlugins().forEach((plugin) => {
-        plugin.enableBot(context, ws, globalStage.plugin.length)
+        // TODO: 修内置插件
+        // plugin.enableBot(context, ws, globalStage.plugin.length)
+        console.warn("Not implemented yet. Skipping 1 builtin plugin: " + plugin.config.name)
     })
-    */
 
 }
