@@ -8,7 +8,14 @@ interface EventKV<T extends keyof EventList> {
     event: T,
     resp: EventList[T]
 }
-
+interface Attachment {
+    content_type?: string,
+    filename?: string,
+    height?: string,
+    width?: string,
+    size?: string,
+    url: string
+}
 export function translateWsEvent<T extends keyof EventList>(event: string, resp: WsResponse): EventKV<T>[] {
     let ans: EventKV<keyof EventList>[] = [];
     switch (event) {
@@ -224,7 +231,7 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 }
             })
             break;
-        
+
         case 'GROUP_ADD_ROBOT':
             (ans as EventKV<'group.add'>[]).push({
                 event: 'group.add',
@@ -239,7 +246,7 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 }
             })
             break;
-        
+
         case 'GROUP_DEL_ROBOT':
             (ans as EventKV<'group.delete'>[]).push({
                 event: 'group.delete',
@@ -254,7 +261,179 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 }
             })
             break;
-        
+
+        // 单聊消息
+        case 'C2C_MESSAGE_CREATE':
+            let c2cResp = {
+                id: resp.msg.id,
+                user: {
+                    id: resp.msg.author.user_openid
+                },
+                message: {
+                    content: resp.msg.content,
+                    attachments: resp.msg.attachments
+                },
+                time: resp.msg.timestamp
+            };
+            (ans as EventKV<'message.c2c'>[]).push({
+                event: 'message.c2c',
+                resp: c2cResp
+            });
+            (ans as EventKV<'message'>[]).push({
+                event: 'message',
+                resp: c2cResp
+            });
+            break;
+
+        // 群聊 @ 机器人
+        case 'GROUP_AT_MESSAGE_CREATE':
+            let groupResp = {
+                id: resp.msg.id,
+                user: {
+                    id: resp.msg.author.member_openid
+                },
+                group: {
+                    id: resp.msg.group_openid
+                },
+                message: {
+                    content: resp.msg.content,
+                    attachments: resp.msg.attachments
+                },
+                time: resp.msg.timestamp
+            };
+            (ans as EventKV<'message.group'>[]).push({
+                event: 'message.group',
+                resp: groupResp
+            });
+            (ans as EventKV<'message'>[]).push({
+                event: 'message',
+                resp: groupResp
+            });
+            break;
+
+        // 频道私信消息
+        case 'DIRECT_MESSAGE_CREATE':
+            let directResp = {
+                id: resp.msg.id,
+                user: {
+                    id: resp.msg.author.id,
+                    avatar: resp.msg.author.avatar,
+                    roles: [], // 频道私信中没有角色信息
+                    username: resp.msg.author.username,
+                    bot: resp.msg.author.bot,
+                    join_time: resp.msg.member?.joined_at || '' // 可能不存在
+                },
+                channel: {
+                    id: resp.msg.channel_id
+                },
+                guild: {
+                    id: resp.msg.guild_id
+                },
+                message: {
+                    content: resp.msg.content,
+                    attachments: resp.msg.attachments,
+                    embeds: resp.msg.embeds,
+                    mentions: resp.msg.mentions,
+                    reference: resp.msg.reference ? {
+                        message_id: resp.msg.reference.message_id
+                    } : undefined,
+                    mention_everyone: resp.msg.mention_everyone
+                },
+                time: resp.msg.timestamp,
+                edited_time: resp.msg.edited_timestamp // 如果存在
+            };
+            (ans as EventKV<'message.direct'>[]).push({
+                event: 'message.direct',
+                resp: directResp
+            });
+            (ans as EventKV<'message'>[]).push({
+                event: 'message',
+                resp: directResp
+            });
+            break;
+
+        // 文字子频道 @ 机器人
+        case 'AT_MESSAGE_CREATE':
+            let atResp = {
+                id: resp.msg.id,
+                user: {
+                    id: resp.msg.author.id,
+                    avatar: resp.msg.author.avatar,
+                    roles: resp.msg.member.roles,
+                    bot: resp.msg.author.bot,
+                    join_time: resp.msg.member.joined_at,
+                    username: resp.msg.author.username
+                },
+                guild: {
+                    id: resp.msg.guild_id // 添加 guild 信息
+                },
+                channel: {
+                    id: resp.msg.channel_id
+                },
+                message: {
+                    content: resp.msg.content,
+                    attachments: resp.msg.attachments,
+                    embeds: resp.msg.embeds,
+                    mentions: resp.msg.mentions,
+                    reference: resp.msg.reference ? {
+                        message_id: resp.msg.reference.message_id
+                    } : undefined,
+                    mention_everyone: resp.msg.mention_everyone
+                },
+                time: resp.msg.timestamp,
+                edited_time: resp.msg.edited_timestamp // 如果存在
+            };
+            (ans as EventKV<'message.guild.public'>[]).push({
+                event: 'message.guild.public',
+                resp: atResp
+            });
+            (ans as EventKV<'message'>[]).push({
+                event: 'message',
+                resp: atResp
+            });
+            break;
+
+        // 文字子频道全量消息
+        case 'MESSAGE_CREATE':
+            let messageResp = {
+                id: resp.msg.id,
+                user: {
+                    id: resp.msg.author.id,
+                    avatar: resp.msg.author.avatar,
+                    roles: resp.msg.member.roles,
+                    bot: resp.msg.author.bot,
+                    join_time: resp.msg.member.joined_at,
+                    username: resp.msg.author.username
+                },
+                guild: {
+                    id: resp.msg.guild_id // 添加 guild 信息
+                },
+                channel: {
+                    id: resp.msg.channel_id
+                },
+                message: {
+                    content: resp.msg.content,
+                    attachments: resp.msg.attachments,
+                    embeds: resp.msg.embeds,
+                    mentions: resp.msg.mentions,
+                    reference: resp.msg.reference ? {
+                        message_id: resp.msg.reference.message_id
+                    } : undefined,
+                    mention_everyone: resp.msg.mention_everyone
+                },
+                time: resp.msg.timestamp,
+                edited_time: resp.msg.edited_timestamp // 如果存在
+            };
+            (ans as EventKV<'message.guild'>[]).push({
+                event: 'message.guild',
+                resp: messageResp
+            });
+            (ans as EventKV<'message'>[]).push({
+                event: 'message',
+                resp: messageResp
+            });
+            break;
+
         default:
             console.warn('Unknown raw WebSocket event, skipping...')
             break;
