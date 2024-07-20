@@ -4,10 +4,262 @@ import { EventEmitter } from "ws"
 
 export const events = ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE', 'FORUMS_EVENT', 'AUDIO_ACTION', 'PUBLIC_GUILD_MESSAGES', 'MESSAGE_AUDIT', 'INTERACTION', 'GROUP_AND_C2C_EVENT']
 
-export function translateWsEvent<T extends keyof EventList>(event: string, resp: WsResponse): Array<{ event: T, resp: EventList[T] }> {
-    let ans: Array<{ event: T, resp: EventList[T] }> = [];
-    // TODO: finish translate
-    return ans;
+interface EventKV<T extends keyof EventList> {
+    event: T,
+    resp: EventList[T]
+}
+
+export function translateWsEvent<T extends keyof EventList>(event: string, resp: WsResponse): EventKV<T>[] {
+    let ans: EventKV<keyof EventList>[] = [];
+    switch (event) {
+        case 'GUILD_CREATE':
+            (ans as EventKV<'guild.add'>[]).push({
+                event: 'guild.add',
+                resp: {
+                    guild: {
+                        name: resp.msg.name,
+                        description: resp.msg.description,
+                        icon: resp.msg.icon,
+                        id: resp.msg.id,
+                        members: {
+                            count: resp.msg.member_count,
+                            max: resp.msg.max_members
+                        },
+                        owner: {
+                            id: resp.msg.owner_id
+                        }
+                    },
+                    user: {
+                        id: resp.msg.op_user_id
+                    },
+                    join_time: resp.msg.joined_at
+                }
+            })
+            break;
+
+        case 'GUILD_UPDATE':
+            (ans as EventKV<'guild.update'>[]).push({
+                event: 'guild.update',
+                resp: {
+                    guild: {
+                        name: resp.msg.name,
+                        description: resp.msg.description,
+                        icon: resp.msg.icon,
+                        id: resp.msg.id,
+                        members: {
+                            count: resp.msg.member_count,
+                            max: resp.msg.max_members
+                        },
+                        owner: {
+                            id: resp.msg.owner_id
+                        }
+                    },
+                    user: {
+                        id: resp.msg.op_user_id
+                    },
+                    join_time: resp.msg.joined_at
+                }
+            })
+            break;
+
+        case 'GUILD_DELETE':
+            (ans as EventKV<'guild.delete'>[]).push({
+                event: 'guild.delete',
+                resp: {
+                    guild: {
+                        name: resp.msg.name,
+                        description: resp.msg.description,
+                        icon: resp.msg.icon,
+                        id: resp.msg.id,
+                        members: {
+                            count: resp.msg.member_count,
+                            max: resp.msg.max_members
+                        },
+                        owner: {
+                            id: resp.msg.owner_id
+                        }
+                    },
+                    user: {
+                        id: resp.msg.op_user_id
+                    },
+                    join_time: resp.msg.joined_at
+                }
+            })
+            break;
+
+        case 'CHANNEL_CREATE':
+            (ans as EventKV<'guild.channel.add'>[]).push({
+                event: 'guild.channel.add',
+                resp: {
+                    guild: {
+                        id: resp.msg.guild_id
+                    },
+                    channel: {
+                        id: resp.msg.id,
+                        name: resp.msg.name,
+                        type: resp.msg.type,
+                        sub_type: resp.msg.sub_type,
+                        owner: {
+                            id: resp.msg.owner_id
+                        }
+                    },
+                    user: {
+                        id: resp.msg.op_user_id
+                    }
+                }
+            });
+            break;
+
+        case 'CHANNEL_UPDATE':
+            (ans as EventKV<'guild.channel.update'>[]).push({
+                event: 'guild.channel.update',
+                resp: {
+                    guild: {
+                        id: resp.msg.guild_id
+                    },
+                    channel: {
+                        id: resp.msg.id,
+                        name: resp.msg.name,
+                        type: resp.msg.type,
+                        sub_type: resp.msg.sub_type,
+                        owner: {
+                            id: resp.msg.owner_id
+                        }
+                    },
+                    user: {
+                        id: resp.msg.op_user_id
+                    }
+                }
+            })
+            break;
+
+        case 'CHANNEL_DELETE':
+            (ans as EventKV<'guild.channel.delete'>[]).push({
+                event: 'guild.channel.delete',
+                resp: {
+                    guild: {
+                        id: resp.msg.guild_id
+                    },
+                    channel: {
+                        id: resp.msg.id,
+                        name: resp.msg.name,
+                        type: resp.msg.type,
+                        sub_type: resp.msg.sub_type,
+                        owner: {
+                            id: resp.msg.owner_id
+                        }
+                    },
+                    user: {
+                        id: resp.msg.op_user_id
+                    }
+                }
+            })
+            break;
+
+        case 'GUILD_MEMBER_ADD':
+            (ans as EventKV<'guild.member.add'>[]).push({
+                event: 'guild.member.add',
+                resp: {
+                    guild: {
+                        id: resp.msg.guild_id
+                    },
+                    member: {
+                        nickname: resp.msg.nick,
+                        avatar: resp.msg.user.avatar,
+                        id: resp.msg.user.id,
+                        roles: resp.msg.roles,
+                        join_time: resp.msg.joined_at,
+                        username: resp.msg.user.username,
+                        bot: resp.msg.user.bot
+                    },
+                    user: {
+                        id: resp.msg.user.id
+                    }
+                }
+            })
+            break;
+
+        case 'GUILD_MEMBER_UPDATE':
+            (ans as EventKV<'guild.member.update'>[]).push({
+                event: 'guild.member.update',
+                resp: {
+                    guild: {
+                        id: resp.msg.guild_id
+                    },
+                    member: {
+                        nickname: resp.msg.nick,
+                        avatar: resp.msg.user.avatar,
+                        id: resp.msg.user.id,
+                        roles: resp.msg.roles,
+                        join_time: resp.msg.joined_at,
+                        username: resp.msg.user.username,
+                        bot: resp.msg.user.bot
+                    },
+                    user: {
+                        id: resp.msg.user.id
+                    }
+                }
+            })
+            break;
+
+        case 'GUILD_MEMBER_REMOVE':
+            (ans as EventKV<'guild.member.remove'>[]).push({
+                event: 'guild.member.remove',
+                resp: {
+                    guild: {
+                        id: resp.msg.guild_id
+                    },
+                    member: {
+                        nickname: resp.msg.nick,
+                        avatar: resp.msg.user.avatar,
+                        id: resp.msg.user.id,
+                        roles: resp.msg.roles,
+                        join_time: resp.msg.joined_at,
+                        username: resp.msg.user.username,
+                        bot: resp.msg.user.bot
+                    },
+                    user: {
+                        id: resp.msg.user.id
+                    }
+                }
+            })
+            break;
+        
+        case 'GROUP_ADD_ROBOT':
+            (ans as EventKV<'group.add'>[]).push({
+                event: 'group.add',
+                resp: {
+                    group: {
+                        id: resp.msg.group_openid
+                    },
+                    user: {
+                        id: resp.msg.op_member_openid,
+                    },
+                    time: resp.msg.timestamp
+                }
+            })
+            break;
+        
+        case 'GROUP_DEL_ROBOT':
+            (ans as EventKV<'group.delete'>[]).push({
+                event: 'group.delete',
+                resp: {
+                    group: {
+                        id: resp.msg.group_openid
+                    },
+                    user: {
+                        id: resp.msg.op_member_openid,
+                    },
+                    time: resp.msg.timestamp
+                }
+            })
+            break;
+        
+        default:
+            console.warn('Unknown raw WebSocket event, skipping...')
+            break;
+    }
+    return ans as EventKV<T>[];
 }
 
 interface GuildEvent {
@@ -26,8 +278,8 @@ interface GuildEvent {
     },
     user: {
         id: string,
-        join_time: string
-    }
+    },
+    join_time: string
 }
 
 interface ChannelEvent {
@@ -332,7 +584,7 @@ export type EventList = {
     'guild.member.remove': GuildMemberEvent,
 
     'group.add': GroupEvent,
-    'group.del': GroupEvent
+    'group.delete': GroupEvent
 
     'message': GuildMessageEvent | C2cMessageEvent | GroupMessageEvent,
     //'message.delete': any, /** Missing docs */
