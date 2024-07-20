@@ -1,8 +1,16 @@
 <div align="center"><a name="readme-top"></a>
 
-> WARNING: 此版本(1.5.0-test*)并非稳定版本，仅用于测试，勿用于生产环境。
+> NOTICE: 此版本(1.5.0-alpha*)为测试版本，其中含有全新的特性，且对原有的API存在较大改动。
 >
-> 请使用稳定版本[1.4.3](https://www.npmjs.com/package/cocotais-bot/v/1.4.3)
+> 推荐使用稳定版本[1.4.3](https://www.npmjs.com/package/cocotais-bot/v/1.4.3)
+> 
+> 请勿使用此版本于生产环境。此版本目前存在以下问题：
+>
+> - 命令系统存在兼容性问题，关闭使用
+> - 内置插件存在兼容性问题，关闭使用
+> - 能够导入以"builtin"名称开头的插件
+>
+> 此版本的API已趋于稳定，开发者可基于类型提示开始对旧版插件进行兼容与迁移。
 
 <img height="160" src="https://static.codemao.cn/coco/player/unstable/ryYpO7wja.image/png?hash=Fk5MB4bIWWoeu5uaE4GQ2VJM0L3o">
 
