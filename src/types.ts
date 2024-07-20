@@ -8,14 +8,7 @@ interface EventKV<T extends keyof EventList> {
     event: T,
     resp: EventList[T]
 }
-interface Attachment {
-    content_type?: string,
-    filename?: string,
-    height?: string,
-    width?: string,
-    size?: string,
-    url: string
-}
+
 export function translateWsEvent<T extends keyof EventList>(event: string, resp: WsResponse): EventKV<T>[] {
     let ans: EventKV<keyof EventList>[] = [];
     switch (event) {
@@ -431,6 +424,169 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             (ans as EventKV<'message'>[]).push({
                 event: 'message',
                 resp: messageResp
+            });
+            break;
+
+        // 表情添加事件
+        case 'MESSAGE_REACTION_ADD':
+            let reactionAddResp: ReactionEvent = {
+                user: {
+                    id: resp.msg.user_id
+                },
+                guild: {
+                    id: resp.msg.guild_id
+                },
+                channel: {
+                    id: resp.msg.channel_id
+                },
+                target: {
+                    id: resp.msg.target.id,
+                    type: resp.msg.target.type === 0 ? 'message' : resp.msg.target.type === 1 ? 'thread' : resp.msg.target.type === 2 ? 'post' : 'reply'
+                },
+                reaction: {
+                    type: resp.msg.emoji.type === 1 ? 'emoji' : 'system',
+                    id: resp.msg.emoji.id
+                }
+            };
+            (ans as EventKV<'reaction'>[]).push({
+                event: 'reaction',
+                resp: reactionAddResp
+            });
+            (ans as EventKV<'reaction.guild'>[]).push({
+                event: 'reaction.guild',
+                resp: reactionAddResp
+            });
+            break;
+
+        // 表情移除事件
+        case 'MESSAGE_REACTION_REMOVE':
+            let reactionRemoveResp: ReactionEvent = {
+                user: {
+                    id: resp.msg.user_id
+                },
+                guild: {
+                    id: resp.msg.guild_id
+                },
+                channel: {
+                    id: resp.msg.channel_id
+                },
+                target: {
+                    id: resp.msg.target.id,
+                    type: resp.msg.target.type === 0 ? 'message' : resp.msg.target.type === 1 ? 'thread' : resp.msg.target.type === 2 ? 'post' : 'reply'
+                },
+                reaction: {
+                    type: resp.msg.emoji.type === 1 ? 'emoji' : 'system',
+                    id: resp.msg.emoji.id
+                }
+            };
+            (ans as EventKV<'reaction'>[]).push({
+                event: 'reaction',
+                resp: reactionRemoveResp
+            });
+            (ans as EventKV<'reaction.guild'>[]).push({
+                event: 'reaction.guild',
+                resp: reactionRemoveResp
+            });
+            break;
+
+        // 消息审核通过事件
+        case 'MESSAGE_AUDIT_PASS':
+            let messageAuditPassResp: MessageAuditEvent<true> = {
+                message: {
+                    audit_id: resp.msg.audit_id,
+                    message_id: resp.msg.message_id
+                },
+                guild: {
+                    id: resp.msg.guild_id
+                },
+                channel: {
+                    id: resp.msg.channel_id
+                },
+                time: {
+                    audit: resp.msg.audit_time,
+                    create: resp.msg.create_time
+                }
+            };
+            (ans as EventKV<'message.audit.pass'>[]).push({
+                event: 'message.audit.pass',
+                resp: messageAuditPassResp
+            });
+            break;
+
+        // 消息审核拒绝事件
+        case 'MESSAGE_AUDIT_REJECT':
+            let messageAuditRejectResp: MessageAuditEvent<false> = {
+                message: {
+                    audit_id: resp.msg.audit_id,
+                    message_id: undefined
+                },
+                guild: {
+                    id: resp.msg.guild_id
+                },
+                channel: {
+                    id: resp.msg.channel_id
+                },
+                time: {
+                    audit: resp.msg.audit_time,
+                    create: resp.msg.create_time
+                }
+            };
+            (ans as EventKV<'message.audit.reject'>[]).push({
+                event: 'message.audit.reject',
+                resp: messageAuditRejectResp
+            });
+            break;
+        // 用户添加好友事件
+        case 'FRIEND_ADD':
+            let friendAddResp: UserEvent = {
+                time: resp.msg.timestamp,
+                user: {
+                    id: resp.msg.openid
+                }
+            };
+            (ans as EventKV<'friend.add'>[]).push({
+                event: 'friend.add',
+                resp: friendAddResp
+            });
+            break;
+
+        // 用户删除好友事件
+        case 'FRIEND_DEL':
+            let friendDeleteResp: UserEvent = {
+                time: resp.msg.timestamp,
+                user: {
+                    id: resp.msg.openid
+                }
+            };
+            (ans as EventKV<'friend.delete'>[]).push({
+                event: 'friend.delete',
+                resp: friendDeleteResp
+            });
+            break;
+        case 'INTERACTION_CREATE':
+            let interactionResp: InteractionEvent = {
+                id: resp.msg.id,
+                scene: resp.msg.chat_type === 0 ? 'guild' : (resp.msg.chat_type === 1 ? 'group' : 'c2c'),
+                time: resp.msg.timestamp,
+                guild: resp.msg.guild_id ? { id: resp.msg.guild_id } : undefined,
+                channel: resp.msg.channel_id ? { id: resp.msg.channel_id } : undefined,
+                user: resp.msg.user_openid ? { id: resp.msg.user_openid } : undefined,
+                group: resp.msg.group_openid ? { id: resp.msg.group_openid } : undefined,
+                interaction: {
+                    type: resp.msg.data.resolved.button_id ? 'button' : 'menu',
+                    button: resp.msg.data.resolved.button_id ? {
+                        data: resp.msg.data.resolved.button_data,
+                        id: resp.msg.data.resolved.button_id
+                    } : undefined,
+                    feature: resp.msg.data.resolved.feature_id,
+                    id: resp.msg.id,
+                    version: resp.msg.version,
+                    bot_id: resp.msg.application_id
+                }
+            };
+            (ans as EventKV<'interaction'>[]).push({
+                event: 'interaction',
+                resp: interactionResp
             });
             break;
 
