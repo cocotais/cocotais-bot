@@ -839,7 +839,7 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             break;
 
         default:
-            console.warn('Unknown raw WebSocket event, skipping...')
+            console.warn('[WARN(011)] Unknown raw WebSocket event, skipping...')
             break;
     }
     return ans as EventKV<T>[];
