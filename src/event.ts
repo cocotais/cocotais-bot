@@ -34,10 +34,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 event: 'guild.add',
                 resp: res
             });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.guild.create' as any,
-                resp: res
-            });
             break;
 
         case 'GUILD_UPDATE':
@@ -62,10 +58,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             };
             (ans as EventKV<'guild.update'>[]).push({
                 event: 'guild.update',
-                resp: resUpdate
-            });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.guild.update' as any,
                 resp: resUpdate
             });
             break;
@@ -94,10 +86,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 event: 'guild.delete',
                 resp: resDelete
             });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.guild.delete' as any,
-                resp: resDelete
-            });
             break;
 
         case 'CHANNEL_CREATE':
@@ -120,10 +108,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             };
             (ans as EventKV<'guild.channel.add'>[]).push({
                 event: 'guild.channel.add',
-                resp: resChannelCreate
-            });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.channel.create' as any,
                 resp: resChannelCreate
             });
             break;
@@ -150,10 +134,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 event: 'guild.channel.update',
                 resp: resChannelUpdate
             });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.channel.update' as any,
-                resp: resChannelUpdate
-            });
             break;
 
         case 'CHANNEL_DELETE':
@@ -176,10 +156,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             };
             (ans as EventKV<'guild.channel.delete'>[]).push({
                 event: 'guild.channel.delete',
-                resp: resChannelDelete
-            });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.channel.delete' as any,
                 resp: resChannelDelete
             });
             break;
@@ -206,10 +182,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 event: 'guild.member.add',
                 resp: resMemberAdd
             });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.guild.member.add' as any,
-                resp: resMemberAdd
-            });
             break;
 
         case 'GUILD_MEMBER_UPDATE':
@@ -232,10 +204,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             };
             (ans as EventKV<'guild.member.update'>[]).push({
                 event: 'guild.member.update',
-                resp: resMemberUpdate
-            });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.guild.member.update' as any,
                 resp: resMemberUpdate
             });
             break;
@@ -262,10 +230,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 event: 'guild.member.remove',
                 resp: resMemberRemove
             });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.guild.member.remove' as any,
-                resp: resMemberRemove
-            });
             break;
 
         case 'GROUP_ADD_ROBOT':
@@ -282,10 +246,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 event: 'group.add',
                 resp: resGroupAdd
             });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.group.add.robot' as any,
-                resp: resGroupAdd
-            });
             break;
 
         case 'GROUP_DEL_ROBOT':
@@ -300,10 +260,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             };
             (ans as EventKV<'group.delete'>[]).push({
                 event: 'group.delete',
-                resp: resGroupDelete
-            });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.group.del.robot' as any,
                 resp: resGroupDelete
             });
             break;
@@ -327,10 +283,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             });
             (ans as EventKV<'message'>[]).push({
                 event: 'message',
-                resp: c2cResp
-            });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.c2c.message.create' as any,
                 resp: c2cResp
             });
             break;
@@ -357,10 +309,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             });
             (ans as EventKV<'message'>[]).push({
                 event: 'message',
-                resp: groupResp
-            });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.group.message.create' as any,
                 resp: groupResp
             });
             break;
@@ -397,10 +345,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             };
             (ans as EventKV<'message.direct'>[]).push({
                 event: 'message.direct',
-                resp: directResp
-            });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.message.direct' as any,
                 resp: directResp
             });
             break;
@@ -440,10 +384,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 event: 'message.guild.public',
                 resp: atResp
             });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.message.guild.public' as any,
-                resp: atResp
-            });
             break;
 
         // 文字子频道全量消息
@@ -481,10 +421,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 event: 'message.guild',
                 resp: messageResp
             });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.message.guild' as any,
-                resp: messageResp
-            });
             break;
 
         // 表情添加事件
@@ -510,10 +446,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             };
             (ans as EventKV<'reaction'>[]).push({
                 event: 'reaction',
-                resp: reactionAddResp
-            });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.reaction' as any,
                 resp: reactionAddResp
             });
             break;
@@ -543,10 +475,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 event: 'reaction.delete',
                 resp: reactionRemoveResp
             });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.reaction.delete' as any,
-                resp: reactionRemoveResp
-            });
             break;
 
         // 消息审核通过事件
@@ -569,10 +497,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             };
             (ans as EventKV<'message.audit.pass'>[]).push({
                 event: 'message.audit.pass',
-                resp: messageAuditPassResp
-            });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.message.audit.pass' as any,
                 resp: messageAuditPassResp
             });
             break;
@@ -599,10 +523,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 event: 'message.audit.reject',
                 resp: messageAuditRejectResp
             });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.message.audit.reject' as any,
-                resp: messageAuditRejectResp
-            });
             break;
 
         // 用户添加好友事件
@@ -617,10 +537,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 event: 'friend.add',
                 resp: friendAddResp
             });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.friend.add' as any,
-                resp: friendAddResp
-            });
             break;
 
         // 用户删除好友事件
@@ -633,10 +549,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             };
             (ans as EventKV<'friend.delete'>[]).push({
                 event: 'friend.delete',
-                resp: friendDeleteResp
-            });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.friend.delete' as any,
                 resp: friendDeleteResp
             });
             break;
@@ -667,10 +579,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 event: 'interaction',
                 resp: interactionResp
             });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.interaction' as any,
-                resp: interactionResp
-            });
             break;
 
         // 主题创建事件
@@ -694,10 +602,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             };
             (ans as EventKV<'forum.thread.create'>[]).push({
                 event: 'forum.thread.create',
-                resp: threadCreateEvent
-            });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.forum.thread.create' as any,
                 resp: threadCreateEvent
             });
             break;
@@ -725,10 +629,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 event: 'forum.thread.update',
                 resp: threadUpdateEvent
             });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.forum.thread.update' as any,
-                resp: threadUpdateEvent
-            });
             break;
 
         // 主题删除事件
@@ -752,10 +652,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             };
             (ans as EventKV<'forum.thread.delete'>[]).push({
                 event: 'forum.thread.delete',
-                resp: threadDeleteEvent
-            });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.forum.thread.delete' as any,
                 resp: threadDeleteEvent
             });
             break;
@@ -785,10 +681,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 event: 'forum.post.create',
                 resp: postCreateEvent
             });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.forum.post.create' as any,
-                resp: postCreateEvent
-            });
             break;
 
         // 帖子删除事件
@@ -814,10 +706,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             };
             (ans as EventKV<'forum.post.delete'>[]).push({
                 event: 'forum.post.delete',
-                resp: postDeleteEvent
-            });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.forum.post.delete' as any,
                 resp: postDeleteEvent
             });
             break;
@@ -850,10 +738,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 event: 'forum.reply.create',
                 resp: replyCreateEvent
             });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.forum.reply.create' as any,
-                resp: replyCreateEvent
-            });
             break;
 
         // 回复删除事件
@@ -884,10 +768,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 event: 'forum.reply.delete',
                 resp: replyDeleteEvent
             });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.forum.reply.delete' as any,
-                resp: replyDeleteEvent
-            });
             break;
 
         // 论坛审核事件
@@ -913,10 +793,6 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             };
             (ans as EventKV<'forum.publish.result'>[]).push({
                 event: 'forum.publish.result',
-                resp: forumAuditEvent
-            });
-            (ans as EventKV<'internal.event'>[]).push({
-                event: 'internal.forum.publish.result' as any,
                 resp: forumAuditEvent
             });
             break;
