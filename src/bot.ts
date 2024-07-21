@@ -1,7 +1,7 @@
 import { IOpenAPI } from "qq-bot-sdk";
 import { EventEmitter } from "events";
 import { globalStage } from ".";
-import { WsResponse, events } from "./types";
+import { C2cMessageEvent, GroupMessageEvent, GuildMessageEvent, WsResponse, events } from "./types";
 import { getBuiltinPlugins } from "./builtins";
 
 function keepAlive() {
@@ -11,7 +11,7 @@ function keepAlive() {
             type: 'ping',
             data: 'ping'
         }
-    },undefined,undefined,(err)=>{
+    }, undefined, undefined, (err) => {
         if (err) {
             console.error("[WARN(001)] 发送保活消息失败，可能无法正常操控机器人")
         }
@@ -49,20 +49,36 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter, event: EventEmit
             }
         })
     });
-
-    events.forEach(event => {
-        ws.on(event, (data: WsResponse) => {
-            console.log(`[${event}] 事件接收 :`, data);
-            /*
-            TODO: 添加命令处理
-            if(messageEvents.includes(data.eventType)){
-                globalStage.commands.forEach((cmd) => {
-                    if (data.msg.content.trim().startsWith(cmd.match)) {
-                        cmd.handler(data.msg.content.trim().split(" "), data)
-                    }
-                })
+    event.on('message.guild', (resp: GuildMessageEvent) => {
+        console.log(`[Guild] ${resp.guild.id}/${resp.channel.id}/${resp.user.id}: ${resp.message.content}`)
+        globalStage.commands.forEach((command) => {
+            if (resp.message.content.trim().startsWith(command.match)) {
+                command.handler('guild', resp.message.content.trim().split(' '), resp)
             }
-            */
+        })
+    })
+    event.on('message.direct', (resp: GuildMessageEvent)=>{
+        console.log(`[Direct] ${resp.guild.id}/${resp.user.id}: ${resp.message.content}`)
+        globalStage.commands.forEach((command) => {
+            if (resp.message.content.trim().startsWith(command.match)) {
+                command.handler('direct', resp.message.content.trim().split(' '), resp)
+            }
+        })
+    })
+    event.on('message.c2c', (resp: C2cMessageEvent) => {
+        console.log(`[C2C] ${resp.user.id}: ${resp.message.content}`)
+        globalStage.commands.forEach((command) => {
+            if (resp.message.content.trim().startsWith(command.match)) {
+                command.handler('c2c', resp.message.content.trim().split(' '), resp)
+            }
+        })
+    })
+    event.on('message.group', (resp: GroupMessageEvent)=>{
+        console.log(`[Group] ${resp.group.id}/${resp.user.id}: ${resp.message.content}`)
+        globalStage.commands.forEach((command) => {
+            if (resp.message.content.trim().startsWith(command.match)) {
+                command.handler('group', resp.message.content.trim().split(' '), resp)
+            }
         })
     })
     getBuiltinPlugins().forEach((plugin) => {

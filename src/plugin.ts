@@ -1,6 +1,6 @@
 import EventEmitter from "events";
 import { IOpenAPI } from "qq-bot-sdk";
-import { EventList, events, WsResponse } from "./types";
+import { C2cMessageEvent, EventList, events, GroupMessageEvent, GuildMessageEvent, WsResponse } from "./types";
 import { translateWsEvent } from './event'
 import { globalStage } from ".";
 import fse from 'fs-extra'
@@ -200,7 +200,6 @@ export class CocotaisBotPlugin extends EventEmitter {
             pushPluginOnly(this, "builtin")
         }
         event.on('internal.event', (event: keyof EventList, resp: EventList[keyof EventList]) => {
-            console.log(`收到事件：${event}`)
             this.emit(event, resp)
         })
     }
@@ -247,7 +246,7 @@ export class CocotaisBotPlugin extends EventEmitter {
          * @param fun 命令执行器
          * @returns 命令ID
          */
-        register(match: string, desc: string, fun: (msgs: string[], event: WsResponse) => void) {
+        register<T extends 'guild' | 'group' | 'direct' | 'c2c'>(match: string, desc: string, fun: (type: T, msgs: string[], event: T extends 'group' ? GroupMessageEvent : T extends 'c2c' ? C2cMessageEvent : GuildMessageEvent) => void) {
             globalStage.commands.push({
                 id: globalStage.plugin.length,
                 description: desc,

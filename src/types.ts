@@ -405,7 +405,7 @@ export interface CommandStaged {
     description: string,
     match: string,
     provider: string,
-    handler: (msgs: string[], event: any) => void
+    handler: (type: any, msgs: string[], event: any) => void
 }
 
 export interface Stage {
