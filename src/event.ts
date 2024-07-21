@@ -8,6 +8,42 @@ interface EventKV<T extends keyof EventList> {
 }
 
 export function translateWsEvent<T extends keyof EventList>(event: string, resp: WsResponse, bot: IOpenAPI): EventKV<T>[] {
+    function generateReplyFunction(type: 'guild'|'group'|'c2c'|'direct', mid: string, gid: string){
+        if (type === 'guild'){
+            return (content: string) => {
+                bot.messageApi.postMessage(gid, {
+                    content: content,
+                    msg_id: mid
+                })
+            }
+        }
+        else if (type === 'group'){
+            return (content: string) => {
+                bot.groupApi.postMessage(gid, {
+                    msg_type: 0,
+                    content: content,
+                    msg_id: mid
+                })
+            }
+        }
+        else if (type === 'c2c'){
+            return (content: string) => {
+                bot.c2cApi.postMessage(gid, {
+                    msg_type: 0,
+                    content: content,
+                    msg_id: mid
+                })
+            }
+        }
+        else {
+            return (content: string) => {
+                bot.directMessageApi.postDirectMessage(gid, {
+                    content: content,
+                    msg_id: mid
+                })
+            }
+        }
+    }
     let ans: EventKV<keyof EventList>[] = [];
     switch (event) {
         case 'GUILD_CREATE':
@@ -275,7 +311,8 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     content: resp.msg.content,
                     attachments: resp.msg.attachments
                 },
-                time: resp.msg.timestamp
+                time: resp.msg.timestamp,
+                reply: generateReplyFunction('c2c', resp.msg.id, resp.msg.author.user_openid)
             };
             (ans as EventKV<'message.c2c'>[]).push({
                 event: 'message.c2c',
@@ -301,7 +338,8 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     content: resp.msg.content,
                     attachments: resp.msg.attachments
                 },
-                time: resp.msg.timestamp
+                time: resp.msg.timestamp,
+                reply: generateReplyFunction('group', resp.msg.id, resp.msg.group_openid)
             };
             (ans as EventKV<'message.group'>[]).push({
                 event: 'message.group',
@@ -341,7 +379,8 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     mention_everyone: resp.msg.mention_everyone
                 },
                 time: resp.msg.timestamp,
-                edited_time: resp.msg.edited_timestamp // 如果存在
+                edited_time: resp.msg.edited_timestamp, // 如果存在
+                reply: generateReplyFunction('direct', resp.msg.id, resp.msg.guild_id)
             };
             (ans as EventKV<'message.direct'>[]).push({
                 event: 'message.direct',
@@ -378,7 +417,8 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     mention_everyone: resp.msg.mention_everyone
                 },
                 time: resp.msg.timestamp,
-                edited_time: resp.msg.edited_timestamp // 如果存在
+                edited_time: resp.msg.edited_timestamp, // 如果存在
+                reply: generateReplyFunction('guild', resp.msg.id, resp.msg.channel_id)
             };
             (ans as EventKV<'message.guild.public'>[]).push({
                 event: 'message.guild.public',
@@ -415,7 +455,8 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     mention_everyone: resp.msg.mention_everyone
                 },
                 time: resp.msg.timestamp,
-                edited_time: resp.msg.edited_timestamp // 如果存在
+                edited_time: resp.msg.edited_timestamp, // 如果存在
+                reply: generateReplyFunction('guild', resp.msg.id, resp.msg.channel_id)
             };
             (ans as EventKV<'message.guild'>[]).push({
                 event: 'message.guild',

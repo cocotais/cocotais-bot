@@ -110,7 +110,8 @@ export interface C2cMessageEvent {
         content: string,
         attachments?: Attachment[],
     },
-    time: string
+    time: string,
+    reply: (content: string) => void
 }
 
 export interface GroupMessageEvent {
@@ -125,7 +126,8 @@ export interface GroupMessageEvent {
         content: string,
         attachments?: Attachment[],
     },
-    time: string
+    time: string,
+    reply: (content: string) => void
 }
 
 export interface GuildMessageEvent {
@@ -158,7 +160,8 @@ export interface GuildMessageEvent {
         mention_everyone: boolean
     },
     time: string,
-    edited_time?: string
+    edited_time?: string,
+    reply: (content: string) => void
 }
 
 export interface MessageAuditEvent<P extends boolean> {
