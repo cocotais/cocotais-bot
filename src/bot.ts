@@ -23,7 +23,7 @@ function keepAlive() {
  * @param context 机器人实例
  * @param ws WebSocket实例
  */
-export function botHandler(context: IOpenAPI, ws: EventEmitter) {
+export function botHandler(context: IOpenAPI, ws: EventEmitter, event: EventEmitter) {
     keepAlive()
     ws.on('READY', (data) => {
         console.log('[READY] 已连接到服务器' + data);

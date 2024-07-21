@@ -1,6 +1,7 @@
 import EventEmitter from "events";
 import { IOpenAPI } from "qq-bot-sdk";
-import { EventList, events, translateWsEvent, WsResponse } from "./types";
+import { EventList, events, WsResponse } from "./types";
+import { translateWsEvent } from './event'
 import { globalStage } from ".";
 import fse from 'fs-extra'
 
@@ -122,7 +123,7 @@ async function reloadPlugin(id: number) {
             }
         }
         else {
-            console.error("[ERR(008)] 重载插件(卸载时)出现错误："+ remove.data)
+            console.error("[ERR(008)] 重载插件(卸载时)出现错误：" + remove.data)
             return {
                 success: false,
                 data: 'Plugin remove error.' + remove.data
@@ -130,7 +131,7 @@ async function reloadPlugin(id: number) {
         }
 
     } catch (e) {
-        console.error("[ERR(009)] 重载插件出现错误："+ typeof e == "object" ? JSON.stringify(e) : String(e))
+        console.error("[ERR(009)] 重载插件出现错误：" + typeof e == "object" ? JSON.stringify(e) : String(e))
         return {
             success: false,
             data: typeof e == "object" ? JSON.stringify(e) : String(e)
@@ -195,12 +196,12 @@ export class CocotaisBotPlugin extends EventEmitter {
         this.id = botId
         try { this._mount(context) } catch (e) { console.error('[ERR(005)] 应用插件出现错误(运行时)：' + typeof e == "object" ? JSON.stringify(e) : String(e)) }
         this.command.name = this.config.name
-        if (this.config.name.startsWith("builtin:")){
+        if (this.config.name.startsWith("builtin:")) {
             pushPluginOnly(this, "builtin")
         }
         this.events.forEach((evt) => {
             const handler = (e: WsResponse) => {
-                let data = translateWsEvent(e.eventType, e)
+                let data = translateWsEvent(e.eventType, e, context)
                 data.forEach(e => {
                     this.emit(e.event, e.resp)
                 })
