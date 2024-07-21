@@ -935,6 +935,7 @@ export class CocotaisBotEvent extends EventEmitter {
             ws.on(event, (resp: WsResponse) => {
                 let translated = translateWsEvent(resp.eventType, resp, bot)
                 translated.forEach(e => {
+                    this.emit('internal.event', e.event, e.resp)
                     this.emit(e.event, e.resp)
                 })
             });

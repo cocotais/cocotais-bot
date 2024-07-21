@@ -17,7 +17,7 @@ function autoloadPlugin() {
     try {
         fse.readdirSync('./plugins').forEach(file => {
             if (file.endsWith('.cjs') || file.endsWith('.mjs') || file.endsWith('.js')) {
-                unsafelyDo(applyPlugin, process.cwd() + '/plugins/' + file, globalStage.botObject.bot, globalStage.botObject.ws)
+                unsafelyDo(applyPlugin, process.cwd() + '/plugins/' + file, globalStage.botObject.bot, globalStage.botObject.ws, globalStage.botObject.event)
             }
         })
         return true
@@ -37,16 +37,14 @@ async function pushPluginOnly(plugin: CocotaisBotPlugin, path: string) {
     })
 }
 
-async function applyPlugin(path: string, bot: IOpenAPI, ws: EventEmitter) {
+async function applyPlugin(path: string, bot: IOpenAPI, ws: EventEmitter, event: EventEmitter) {
     try {
         const pluginModule = await import(path);
         const plugin: CocotaisBotPlugin = pluginModule.default;
-        /*
-        if (plugin.config.name.startsWith("builtin")){
+        if (plugin.config.name.startsWith("builtin")) {
             console.error("[ERR(005)] 应用插件出现错误：插件名称非法，无法应用")
         }
-        */
-        plugin.enableBot(bot, ws, globalStage.plugin.length);
+        plugin.enableBot(bot, ws, globalStage.plugin.length, event);
         globalStage.plugin.push({
             id: globalStage.plugin.length,
             config: plugin.config,
@@ -70,11 +68,9 @@ async function applyPlugin(path: string, bot: IOpenAPI, ws: EventEmitter) {
 function removePlugin(id: number) {
     try {
         let path = globalStage.plugin[id].path
-        /*
-        if(path == "builtin"){
+        if (path == "builtin") {
             console.error("[ERR(006)] 卸载插件出现错误：插件内置，无法卸载")
         }
-        */
         globalStage.plugin[id].pluginObject.disableBot()
         globalStage.plugin.splice(id, 1)
         for (const key in require.cache) {
@@ -100,8 +96,8 @@ async function reloadPlugin(id: number) {
     try {
         let remove = removePlugin(id)
         if (remove.success) {
-            if (globalStage.botObject.bot != null && globalStage.botObject.ws != null) {
-                let apply = await applyPlugin(temp.path, globalStage.botObject.bot, globalStage.botObject.ws)
+            if (globalStage.botObject.bot != null && globalStage.botObject.ws != null && globalStage.botObject.event != null) {
+                let apply = await applyPlugin(temp.path, globalStage.botObject.bot, globalStage.botObject.ws, globalStage.botObject.event)
                 if (apply.success)
                     return {
                         success: true,
@@ -151,7 +147,9 @@ export class CocotaisBotPlugin extends EventEmitter {
     /**机器人实例 */
     private botContext: IOpenAPI | null;
     /**WebSocket实例 */
-    private botWs: EventEmitter | null
+    private botWs: EventEmitter | null;
+    /**事件实例 */
+    private botEvent: EventEmitter | null;
     /**挂载插件时执行的函数 */
     protected _mount: (bot: IOpenAPI) => void
     /**卸载插件时执行的函数 */
@@ -168,7 +166,8 @@ export class CocotaisBotPlugin extends EventEmitter {
     constructor(name: string, version: string) {
         super()
         this.botContext = null;
-        this.botWs = null
+        this.botWs = null;
+        this.botEvent = null;
         this._mount = () => { };
         this._unmount = () => { };
         this.events = events
@@ -190,29 +189,20 @@ export class CocotaisBotPlugin extends EventEmitter {
      * @param context 机器人实例
      * @param ws WebSocket实例
      */
-    enableBot(context: IOpenAPI, ws: EventEmitter, botId: number) {
+    enableBot(context: IOpenAPI, ws: EventEmitter, botId: number, event: EventEmitter) {
         this.botContext = context
         this.botWs = ws
+        this.botEvent = event
         this.id = botId
         try { this._mount(context) } catch (e) { console.error('[ERR(005)] 应用插件出现错误(运行时)：' + typeof e == "object" ? JSON.stringify(e) : String(e)) }
         this.command.name = this.config.name
         if (this.config.name.startsWith("builtin:")) {
             pushPluginOnly(this, "builtin")
         }
-        this.events.forEach((evt) => {
-            const handler = (e: WsResponse) => {
-                let data = translateWsEvent(e.eventType, e, context)
-                data.forEach(e => {
-                    this.emit(e.event, e.resp)
-                })
-            };
-            // 插件收到事件时，将事件及数据 emit 给插件里定义的处理函数
-            this.botWs?.on(evt, (e: WsResponse) => {
-                if (this.isBotEnabled()) {
-                    unsafelyDo(handler, e)
-                }
-            });
-        });
+        event.on('internal.event', (event: keyof EventList, resp: EventList[keyof EventList]) => {
+            console.log(`收到事件：${event}`)
+            this.emit(event, resp)
+        })
     }
     /**
      * 禁用机器人
@@ -258,10 +248,6 @@ export class CocotaisBotPlugin extends EventEmitter {
          * @returns 命令ID
          */
         register(match: string, desc: string, fun: (msgs: string[], event: WsResponse) => void) {
-            console.warn("Not implemented yet.")
-            return -1;
-            /*
-            TODO: 完成命令系统
             globalStage.commands.push({
                 id: globalStage.plugin.length,
                 description: desc,
@@ -270,7 +256,6 @@ export class CocotaisBotPlugin extends EventEmitter {
                 handler: fun
             })
             return globalStage.plugin.length - 1;
-            */
         },
         /**
          * 卸载一个命令
