@@ -19,6 +19,7 @@ export async function startBot(options: GetWsParam & Config) {
 
     if (!client || !ws){
         console.error("[ERR(000)] 创建机器人实例失败")
+        console.error("[ERR(000)] 请检查网络连接，随后重启机器人")
     }
 
     const event = new CocotaisBotEvent(client, ws)

@@ -902,7 +902,9 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             break;
 
         default:
-            console.warn('[WARN(011)] Unknown raw WebSocket event, skipping...')
+            console.error(`[WARN(011)] 解析到未知的 WebSocket 事件`)
+            console.error(`[WARN(011)] 事件名称: ${event}`)
+            console.error(`[WARN(011)] 跳过中......`)
             break;
     }
     return ans as EventKV<T>[];

@@ -13,7 +13,10 @@ function keepAlive() {
         }
     }, undefined, undefined, (err) => {
         if (err) {
-            console.error("[WARN(001)] 发送保活消息失败，可能无法正常操控机器人")
+            console.error("[WARN(001)] 无法向守护进程发送保活消息")
+            console.error(`[WARN(001)] 遇到问题: ${err.name}`)
+            console.error(`[WARN(001)] 错误信息: ${err.message}`)
+            console.error(`[WARN(001)] 错误堆栈: ${err.stack?.split("\n").join("\n[WARN(001)] ")}`)
         }
     })
 }

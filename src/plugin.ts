@@ -9,7 +9,12 @@ function unsafelyDo(func: Function, ...args: any) {
     try {
         func(...args)
     } catch (e) {
-        console.error("[WARN(003)] 不安全的执行抛出了错误")
+        console.error("[WARN(003)] 不安全的执行抛出了错误: ")
+        console.error(`[WARN(003)] 执行函数 ${func.name} 时`)
+        console.error(`[WARN(003)] 携带参数 ${args.join(',')}`)
+        console.error(`[WARN(003)] 遇到问题: ${(e as Error).name}`)
+        console.error(`[WARN(003)] 错误信息: ${(e as Error).message}`)
+        console.error(`[WARN(003)] 错误堆栈: ${(e as Error).stack?.split("\n").join("\n[WARN(003)] ")}`)
     }
 }
 
