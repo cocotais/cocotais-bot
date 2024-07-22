@@ -119,7 +119,7 @@ export interface C2cMessageEvent {
         attachments?: Attachment[],
     },
     time: string,
-    reply: ((content: string) => void) | ((content: Omit<MessageToCreate, "msg_id">) => void) | ((content: Omit<GMessageToCreate, "msg_id">) => void)
+    reply: ((content: string | Omit<MessageToCreate, "msg_id"> | Omit<GMessageToCreate, "msg_id">) => void)
 }
 
 export interface GroupMessageEvent {
@@ -136,7 +136,7 @@ export interface GroupMessageEvent {
         attachments?: Attachment[],
     },
     time: string,
-    reply: ((content: string) => void) | ((content: Omit<MessageToCreate, "msg_id">) => void) | ((content: Omit<GMessageToCreate, "msg_id">) => void)
+    reply: ((content: string | Omit<MessageToCreate, "msg_id"> | Omit<GMessageToCreate, "msg_id">) => void)
 }
 
 export interface GuildMessageEvent {
@@ -173,7 +173,7 @@ export interface GuildMessageEvent {
     },
     time: string,
     edited_time?: string,
-    reply: ((content: string) => void) | ((content: Omit<MessageToCreate, "msg_id">) => void) | ((content: Omit<GMessageToCreate, "msg_id">) => void)
+    reply: ((content: string | Omit<MessageToCreate, "msg_id"> | Omit<GMessageToCreate, "msg_id">) => void)
 }
 
 export interface MessageAuditEvent<P extends boolean> {

@@ -10,7 +10,7 @@ interface EventKV<T extends keyof EventList> {
 export function translateWsEvent<T extends keyof EventList>(event: string, resp: WsResponse, bot: IOpenAPI): EventKV<T>[] {
     function generateReplyFunction(type: 'guild' | 'group' | 'c2c' | 'direct', mid: string, gid: string) {
         if (type === 'guild') {
-            return (content: string | Omit<MessageToCreate, "msg_id">) => {
+            return (content: string | Omit<MessageToCreate, "msg_id"> | Omit<GMessageToCreate, "msg_id">) => {
                 if (typeof content == 'string') {
                     bot.messageApi.postMessage(gid, {
                         content: content,
@@ -19,14 +19,14 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 }
                 else {
                     bot.messageApi.postMessage(gid, {
-                        ...content,
+                        ...(content as Omit<MessageToCreate, "msg_id">),
                         msg_id: mid
                     })
                 }
             }
         }
         else if (type === 'group') {
-            return (content: string | Omit<GMessageToCreate, "msg_id">) => {
+            return (content: string | Omit<MessageToCreate, "msg_id"> | Omit<GMessageToCreate, "msg_id">) => {
                 if (typeof content == 'string') {
                     bot.groupApi.postMessage(gid, {
                         msg_type: 0,
@@ -36,14 +36,14 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 }
                 else {
                     bot.groupApi.postMessage(gid, {
-                        ...content,
+                        ...(content as Omit<GMessageToCreate, "msg_id">),
                         msg_id: mid
                     })
                 }
             }
         }
         else if (type === 'c2c') {
-            return (content: string | Omit<GMessageToCreate, "msg_id">) => {
+            return (content: string | Omit<MessageToCreate, "msg_id"> | Omit<GMessageToCreate, "msg_id">) => {
                 if (typeof content == 'string') {
                     bot.c2cApi.postMessage(gid, {
                         msg_type: 0,
@@ -53,14 +53,14 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 }
                 else {
                     bot.c2cApi.postMessage(gid, {
-                        ...content,
+                        ...(content as Omit<GMessageToCreate, "msg_id">),
                         msg_id: mid
                     })
                 }
             }
         }
         else {
-            return (content: string | Omit<MessageToCreate, "msg_id">) => {
+            return (content: string | Omit<MessageToCreate, "msg_id"> | Omit<GMessageToCreate, "msg_id">) => {
                 if (typeof content == 'string') {
                     bot.directMessageApi.postDirectMessage(gid, {
                         content: content,
@@ -69,7 +69,7 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 }
                 else {
                     bot.directMessageApi.postDirectMessage(gid, {
-                        ...content,
+                        ...(content as Omit<MessageToCreate, "msg_id">),
                         msg_id: mid
                     })
                 }
