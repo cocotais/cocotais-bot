@@ -1,11 +1,14 @@
 <div align="center"><a name="readme-top"></a>
 
-> WARNING: 此版本(1.5.0-test*)并非稳定版本，仅用于测试，勿用于生产环境。
+> NOTICE: 此版本(1.5.0-alpha*)为测试版本，其中含有全新的特性，且对原有的API存在较大改动。
 >
 > 推荐使用稳定版本[1.4.3](https://www.npmjs.com/package/cocotais-bot/v/1.4.3)
->
-> 或降级至测试版本[1.5.0-alpha0](https://www.npmjs.com/package/cocotais-bot/v/1.5.0-alpha0)
 > 
+> 请勿使用此版本于生产环境。此版本目前存在以下问题：
+>
+> - 日志系统等待优化
+>
+> 此版本的API已趋于稳定，开发者可基于类型提示开始对旧版插件进行兼容与迁移。
 
 <img height="160" src="https://static.codemao.cn/coco/player/unstable/ryYpO7wja.image/png?hash=Fk5MB4bIWWoeu5uaE4GQ2VJM0L3o">
 
