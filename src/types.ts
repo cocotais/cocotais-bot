@@ -16,10 +16,12 @@ export interface GuildEvent {
         },
         owner: {
             id: string
+            at: () => string
         }
     },
     user: {
         id: string,
+        at: () => string
     },
     join_time: string
 }
@@ -34,11 +36,14 @@ export interface ChannelEvent {
         type: 'text' | 'audio' | 'channel_group' | 'live' | 'app' | 'forum',
         sub_type?: '闲聊' | '公告' | '攻略' | '开黑',
         owner: {
-            id: string
-        }
+            id: string,
+            at: () => string
+        },
+        at_everyone: () => string
     },
     user: {
-        id: string
+        id: string,
+        at: () => string
     }
 }
 
@@ -53,10 +58,12 @@ export interface GuildMemberEvent {
         id: string,
         username: string,
         bot: boolean,
-        join_time: string
+        join_time: string,
+        at: () => string
     },
     user: {
-        id: string
+        id: string,
+        at: () => string
     }
 }
 
@@ -66,7 +73,8 @@ export interface GroupEvent {
         id: string
     },
     user: {
-        id: string
+        id: string,
+        at: () => string
     }
 }
 
@@ -117,7 +125,8 @@ export interface C2cMessageEvent {
 export interface GroupMessageEvent {
     id: string,
     user: {
-        id: string
+        id: string,
+        at: () => string
     },
     group: {
         id: string
@@ -138,13 +147,15 @@ export interface GuildMessageEvent {
         id: string,
         username: string,
         bot: boolean,
-        join_time: string
+        join_time: string,
+        at: () => string
     },
     guild: {
         id: string
     },
     channel: {
-        id: string
+        id: string,
+        at_everyone: () => string
     },
     message: {
         content: string,
@@ -155,6 +166,7 @@ export interface GuildMessageEvent {
             id: string,
             username: string,
             bot: boolean,
+            at: () => string
         }[],
         reference?: Reference,
         mention_everyone: boolean
@@ -173,7 +185,8 @@ export interface MessageAuditEvent<P extends boolean> {
         id: string
     },
     channel: {
-        id: string
+        id: string,
+        at_everyone: () => string
     },
     time: {
         audit: string,
@@ -183,13 +196,15 @@ export interface MessageAuditEvent<P extends boolean> {
 
 export interface ReactionEvent {
     user: {
-        id: string
+        id: string,
+        at: () => string
     },
     guild: {
         id: string
     },
     channel: {
-        id: string
+        id: string,
+        at_everyone: () => string
     },
     target: {
         id: string,
@@ -235,10 +250,12 @@ export interface ThreadEvent {
         id: string
     },
     channel: {
-        id: string
+        id: string,
+        at_everyone: () => string
     },
     user: {
-        id: string
+        id: string,
+        at: () => string
     },
     thread: {
         id: string,
@@ -253,10 +270,12 @@ export interface PostEvent {
         id: string
     },
     channel: {
-        id: string
+        id: string,
+        at_everyone: () => string
     },
     user: {
-        id: string
+        id: string,
+        at: () => string
     },
     thread: {
         id: string
@@ -273,10 +292,12 @@ export interface ReplyEvent {
         id: string
     },
     channel: {
-        id: string
+        id: string,
+        at_everyone: () => string
     },
     user: {
-        id: string
+        id: string,
+        at: () => string
     },
     thread: {
         id: string

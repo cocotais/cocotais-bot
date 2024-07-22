@@ -44,6 +44,18 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             }
         }
     }
+    function generateAtFunction(type: 'user' | 'everyone', uid?: string){
+        if (type === 'user'){
+            return () => {
+                return `<qqbot-at-user id="${uid}" />`
+            }
+        }
+        else {
+            return () => {
+                return `<qqbot-at-everyone />`
+            }
+        }
+    }
     let ans: EventKV<keyof EventList>[] = [];
     switch (event) {
         case 'GUILD_CREATE':
@@ -58,11 +70,13 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                         max: resp.msg.max_members
                     },
                     owner: {
-                        id: resp.msg.owner_id
+                        id: resp.msg.owner_id,
+                        at: generateAtFunction('user', resp.msg.op_user_id)
                     }
                 },
                 user: {
-                    id: resp.msg.op_user_id
+                    id: resp.msg.op_user_id,
+                    at: generateAtFunction('user', resp.msg.op_user_id)
                 },
                 join_time: resp.msg.joined_at
             };
@@ -84,11 +98,13 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                         max: resp.msg.max_members
                     },
                     owner: {
-                        id: resp.msg.owner_id
+                        id: resp.msg.owner_id,
+                        at: generateAtFunction('user', resp.msg.owner_id)
                     }
                 },
                 user: {
-                    id: resp.msg.op_user_id
+                    id: resp.msg.op_user_id,
+                    at: generateAtFunction('user', resp.msg.op_user_id)
                 },
                 join_time: resp.msg.joined_at
             };
@@ -110,11 +126,13 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                         max: resp.msg.max_members
                     },
                     owner: {
-                        id: resp.msg.owner_id
+                        id: resp.msg.owner_id,
+                        at: generateAtFunction('user', resp.msg.owner_id)
                     }
                 },
                 user: {
-                    id: resp.msg.op_user_id
+                    id: resp.msg.op_user_id,
+                    at: generateAtFunction('user', resp.msg.op_user_id)
                 },
                 join_time: resp.msg.joined_at
             };
@@ -135,11 +153,14 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     type: resp.msg.type,
                     sub_type: resp.msg.sub_type,
                     owner: {
-                        id: resp.msg.owner_id
-                    }
+                        id: resp.msg.owner_id,
+                        at: generateAtFunction('user', resp.msg.owner_id)
+                    },
+                    at_everyone: generateAtFunction('everyone')
                 },
                 user: {
-                    id: resp.msg.op_user_id
+                    id: resp.msg.op_user_id,
+                    at: generateAtFunction('user', resp.msg.op_user_id)
                 }
             };
             (ans as EventKV<'guild.channel.add'>[]).push({
@@ -159,11 +180,14 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     type: resp.msg.type,
                     sub_type: resp.msg.sub_type,
                     owner: {
-                        id: resp.msg.owner_id
-                    }
+                        id: resp.msg.owner_id,
+                        at: generateAtFunction('user', resp.msg.owner_id)
+                    },
+                    at_everyone: generateAtFunction('everyone')
                 },
                 user: {
-                    id: resp.msg.op_user_id
+                    id: resp.msg.op_user_id,
+                    at: generateAtFunction('user', resp.msg.op_user_id)
                 }
             };
             (ans as EventKV<'guild.channel.update'>[]).push({
@@ -183,11 +207,14 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     type: resp.msg.type,
                     sub_type: resp.msg.sub_type,
                     owner: {
-                        id: resp.msg.owner_id
-                    }
+                        id: resp.msg.owner_id,
+                        at: generateAtFunction('user', resp.msg.owner_id)
+                    },
+                    at_everyone: generateAtFunction('everyone')
                 },
                 user: {
-                    id: resp.msg.op_user_id
+                    id: resp.msg.op_user_id,
+                    at: generateAtFunction('user', resp.msg.op_user_id)
                 }
             };
             (ans as EventKV<'guild.channel.delete'>[]).push({
@@ -208,10 +235,12 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     roles: resp.msg.roles,
                     join_time: resp.msg.joined_at,
                     username: resp.msg.user.username,
-                    bot: resp.msg.user.bot
+                    bot: resp.msg.user.bot,
+                    at: generateAtFunction('user', resp.msg.user.id)
                 },
                 user: {
-                    id: resp.msg.user.id
+                    id: resp.msg.op_user_id,
+                    at: generateAtFunction('user', resp.msg.op_user_id)
                 }
             };
             (ans as EventKV<'guild.member.add'>[]).push({
@@ -232,10 +261,12 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     roles: resp.msg.roles,
                     join_time: resp.msg.joined_at,
                     username: resp.msg.user.username,
-                    bot: resp.msg.user.bot
+                    bot: resp.msg.user.bot,
+                    at: generateAtFunction('user', resp.msg.user.id)
                 },
                 user: {
-                    id: resp.msg.user.id
+                    id: resp.msg.op_user_id,
+                    at: generateAtFunction('user', resp.msg.op_user_id)
                 }
             };
             (ans as EventKV<'guild.member.update'>[]).push({
@@ -256,10 +287,12 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     roles: resp.msg.roles,
                     join_time: resp.msg.joined_at,
                     username: resp.msg.user.username,
-                    bot: resp.msg.user.bot
+                    bot: resp.msg.user.bot,
+                    at: generateAtFunction('user', resp.msg.user.id)
                 },
                 user: {
-                    id: resp.msg.user.id
+                    id: resp.msg.op_user_id,
+                    at: generateAtFunction('user', resp.msg.op_user_id)
                 }
             };
             (ans as EventKV<'guild.member.remove'>[]).push({
@@ -274,7 +307,8 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     id: resp.msg.group_openid
                 },
                 user: {
-                    id: resp.msg.op_member_openid
+                    id: resp.msg.op_member_openid,
+                    at: generateAtFunction('user', resp.msg.op_member_openid)
                 },
                 time: resp.msg.timestamp
             };
@@ -290,7 +324,8 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     id: resp.msg.group_openid
                 },
                 user: {
-                    id: resp.msg.op_member_openid
+                    id: resp.msg.op_member_openid,
+                    at: generateAtFunction('user', resp.msg.op_member_openid)
                 },
                 time: resp.msg.timestamp
             };
@@ -305,7 +340,8 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             let c2cResp = {
                 id: resp.msg.id,
                 user: {
-                    id: resp.msg.author.user_openid
+                    id: resp.msg.author.user_openid,
+                    at: generateAtFunction('user', resp.msg.author.user_openid)
                 },
                 message: {
                     content: resp.msg.content,
@@ -329,7 +365,8 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             let groupResp = {
                 id: resp.msg.id,
                 user: {
-                    id: resp.msg.author.member_openid
+                    id: resp.msg.author.member_openid,
+                    at: generateAtFunction('user', resp.msg.author.member_openid)
                 },
                 group: {
                     id: resp.msg.group_openid
@@ -360,10 +397,12 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     roles: [], // 频道私信中没有角色信息
                     username: resp.msg.author.username,
                     bot: resp.msg.author.bot,
-                    join_time: resp.msg.member?.joined_at || '' // 可能不存在
+                    join_time: resp.msg.member?.joined_at || '', // 可能不存在
+                    at: generateAtFunction('user', resp.msg.user.id)
                 },
                 channel: {
-                    id: resp.msg.channel_id
+                    id: resp.msg.channel_id,
+                    at_everyone: generateAtFunction('everyone')
                 },
                 guild: {
                     id: resp.msg.guild_id
@@ -398,13 +437,15 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     roles: resp.msg.member.roles,
                     bot: resp.msg.author.bot,
                     join_time: resp.msg.member.joined_at,
-                    username: resp.msg.author.username
+                    username: resp.msg.author.username,
+                    at: generateAtFunction('user', resp.msg.author.id)
                 },
                 guild: {
                     id: resp.msg.guild_id // 添加 guild 信息
                 },
                 channel: {
-                    id: resp.msg.channel_id
+                    id: resp.msg.channel_id,
+                    at_everyone: generateAtFunction('everyone')
                 },
                 message: {
                     content: resp.msg.content,
@@ -436,13 +477,15 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     roles: resp.msg.member.roles,
                     bot: resp.msg.author.bot,
                     join_time: resp.msg.member.joined_at,
-                    username: resp.msg.author.username
+                    username: resp.msg.author.username,
+                    at: generateAtFunction('user', resp.msg.author.id)
                 },
                 guild: {
                     id: resp.msg.guild_id // 添加 guild 信息
                 },
                 channel: {
-                    id: resp.msg.channel_id
+                    id: resp.msg.channel_id,
+                    at_everyone: generateAtFunction('everyone')
                 },
                 message: {
                     content: resp.msg.content,
@@ -468,13 +511,15 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
         case 'MESSAGE_REACTION_ADD':
             let reactionAddResp: ReactionEvent = {
                 user: {
-                    id: resp.msg.user_id
+                    id: resp.msg.user_id,
+                    at: generateAtFunction('user', resp.msg.user_id)
                 },
                 guild: {
                     id: resp.msg.guild_id
                 },
                 channel: {
-                    id: resp.msg.channel_id
+                    id: resp.msg.channel_id,
+                    at_everyone: generateAtFunction('everyone')
                 },
                 target: {
                     id: resp.msg.target.id,
@@ -495,13 +540,15 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
         case 'MESSAGE_REACTION_REMOVE':
             let reactionRemoveResp: ReactionEvent = {
                 user: {
-                    id: resp.msg.user_id
+                    id: resp.msg.user_id,
+                    at: generateAtFunction('user', resp.msg.user_id)
                 },
                 guild: {
                     id: resp.msg.guild_id
                 },
                 channel: {
-                    id: resp.msg.channel_id
+                    id: resp.msg.channel_id,
+                    at_everyone: generateAtFunction('everyone')
                 },
                 target: {
                     id: resp.msg.target.id,
@@ -529,7 +576,8 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     id: resp.msg.guild_id
                 },
                 channel: {
-                    id: resp.msg.channel_id
+                    id: resp.msg.channel_id,
+                    at_everyone: generateAtFunction('everyone')
                 },
                 time: {
                     audit: resp.msg.audit_time,
@@ -553,7 +601,8 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     id: resp.msg.guild_id
                 },
                 channel: {
-                    id: resp.msg.channel_id
+                    id: resp.msg.channel_id,
+                    at_everyone: generateAtFunction('everyone')
                 },
                 time: {
                     audit: resp.msg.audit_time,
@@ -629,10 +678,12 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     id: resp.msg.guild_id
                 },
                 channel: {
-                    id: resp.msg.channel_id
+                    id: resp.msg.channel_id,
+                    at_everyone: generateAtFunction('everyone')
                 },
                 user: {
-                    id: resp.msg.author_id
+                    id: resp.msg.author_id,
+                    at: generateAtFunction('user', resp.msg.author_id)
                 },
                 thread: {
                     id: resp.msg.thread_info.thread_id,
@@ -654,10 +705,12 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     id: resp.msg.guild_id
                 },
                 channel: {
-                    id: resp.msg.channel_id
+                    id: resp.msg.channel_id,
+                    at_everyone: generateAtFunction('everyone')
                 },
                 user: {
-                    id: resp.msg.author_id
+                    id: resp.msg.author_id,
+                    at: generateAtFunction('user', resp.msg.author_id)
                 },
                 thread: {
                     id: resp.msg.thread_info.thread_id,
@@ -679,10 +732,12 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     id: resp.msg.guild_id
                 },
                 channel: {
-                    id: resp.msg.channel_id
+                    id: resp.msg.channel_id,
+                    at_everyone: generateAtFunction('everyone')
                 },
                 user: {
-                    id: resp.msg.author_id
+                    id: resp.msg.author_id,
+                    at: generateAtFunction('user', resp.msg.author_id)
                 },
                 thread: {
                     id: resp.msg.thread_info.thread_id,
@@ -704,10 +759,12 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     id: resp.msg.guild_id
                 },
                 channel: {
-                    id: resp.msg.channel_id
+                    id: resp.msg.channel_id,
+                    at_everyone: generateAtFunction('everyone')
                 },
                 user: {
-                    id: resp.msg.author_id
+                    id: resp.msg.author_id,
+                    at: generateAtFunction('user', resp.msg.author_id)
                 },
                 thread: {
                     id: resp.msg.post_info.thread_id
@@ -731,10 +788,12 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     id: resp.msg.guild_id
                 },
                 channel: {
-                    id: resp.msg.channel_id
+                    id: resp.msg.channel_id,
+                    at_everyone: generateAtFunction('everyone')
                 },
                 user: {
-                    id: resp.msg.author_id
+                    id: resp.msg.author_id,
+                    at: generateAtFunction('user', resp.msg.author_id)
                 },
                 thread: {
                     id: resp.msg.post_info.thread_id
@@ -758,10 +817,12 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     id: resp.msg.guild_id
                 },
                 channel: {
-                    id: resp.msg.channel_id
+                    id: resp.msg.channel_id,
+                    at_everyone: generateAtFunction('everyone')
                 },
                 user: {
-                    id: resp.msg.author_id
+                    id: resp.msg.author_id,
+                    at: generateAtFunction('user', resp.msg.author_id)
                 },
                 thread: {
                     id: resp.msg.reply_info.thread_id
@@ -788,10 +849,12 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                     id: resp.msg.guild_id
                 },
                 channel: {
-                    id: resp.msg.channel_id
+                    id: resp.msg.channel_id,
+                    at_everyone: generateAtFunction('everyone')
                 },
                 user: {
-                    id: resp.msg.author_id
+                    id: resp.msg.author_id,
+                    at: generateAtFunction('user', resp.msg.author_id)
                 },
                 thread: {
                     id: resp.msg.reply_info.thread_id
