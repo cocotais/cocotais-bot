@@ -1,6 +1,7 @@
 import { GetWsParam, Config, createOpenAPI, createWebsocket } from 'qq-bot-sdk';
 import { botHandler } from './bot';
 import { globalStage } from '.';
+import { CocotaisBotEvent } from './event';
 
 /**
  * 启动机器人
@@ -18,10 +19,14 @@ export async function startBot(options: GetWsParam & Config) {
 
     if (!client || !ws){
         console.error("[ERR(000)] 创建机器人实例失败")
+        console.error("[ERR(000)] 请检查网络连接，随后重启机器人")
     }
 
-    globalStage.botObject.bot = client
-    globalStage.botObject.ws = ws
+    const event = new CocotaisBotEvent(client, ws)
 
-    botHandler(client,ws)
+    globalStage.botObject.bot = client
+    globalStage.botObject.event = event
+    globalStage.botObject.ws = ws
+    
+    botHandler(client,ws,event)
 }

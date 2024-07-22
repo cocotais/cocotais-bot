@@ -4,7 +4,7 @@ import { GetWsParam, Config } from 'qq-bot-sdk';
 import plugin, { CocotaisBotPlugin } from './plugin';
 import { Stage } from './types';
 
-export let globalStage: Stage = { botObject: { bot: null, ws: null }, plugin: [], commands: [] }
+export let globalStage: Stage = { botObject: { bot: null, ws: null, event: null }, plugin: [], commands: [] }
 
 export { CocotaisBotPlugin }
 
@@ -23,8 +23,8 @@ if (!isRequired) {
             })
         }
         else if (msg.data.type == 'plugin.apply') {
-            if (globalStage.botObject.bot != null && globalStage.botObject.ws != null) {
-                let apply = await plugin.applyPlugin(msg.data.data.path, globalStage.botObject.bot, globalStage.botObject.ws)
+            if (globalStage.botObject.bot != null && globalStage.botObject.ws != null && globalStage.botObject.event != null) {
+                let apply = await plugin.applyPlugin(msg.data.data.path, globalStage.botObject.bot, globalStage.botObject.ws, globalStage.botObject.event)
                 if (apply.success) {
                     process.send!({
                         type: 'process:msg',
