@@ -1,15 +1,5 @@
 <div align="center"><a name="readme-top"></a>
 
-> NOTICE: 此版本(1.5.0-alpha*)为测试版本，其中含有全新的特性，且对原有的API存在较大改动。
->
-> 推荐使用稳定版本[1.4.3](https://www.npmjs.com/package/cocotais-bot/v/1.4.3)
-> 
-> 请勿使用此版本于生产环境。此版本目前存在以下问题：
->
-> - 日志系统等待优化
->
-> 此版本的API已趋于稳定，开发者可基于类型提示开始对旧版插件进行兼容与迁移。
-
 <img height="160" src="https://static.codemao.cn/coco/player/unstable/ryYpO7wja.image/png?hash=Fk5MB4bIWWoeu5uaE4GQ2VJM0L3o">
 
 <h1>Cocotais Bot</h1>
@@ -36,7 +26,7 @@
 ## ✨ 特性
 
 - 💨 **快速**: 使用NodeJS+NPM即可快速部署机器人实例。
-- 🐈 **轻量**: 打包后仅18个文件，70KB。
+- 🐈 **轻量**: 打包后仅20个文件，不到100KB。
 - 🗣️ **易用**: 提供了详细的文档，丰富的代码补全。
 
 
