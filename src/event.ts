@@ -1,6 +1,6 @@
 import { EventEmitter } from "node:events";
 import { events, EventList, WsResponse, ReactionEvent, MessageAuditEvent, UserEvent, InteractionEvent, ThreadEvent, PostEvent, ReplyEvent, ForumAuditEvent } from "./types";
-import { IOpenAPI } from "qq-bot-sdk";
+import { GMessageToCreate, IOpenAPI, MessageToCreate } from "qq-bot-sdk";
 
 interface EventKV<T extends keyof EventList> {
     event: T,
@@ -8,44 +8,76 @@ interface EventKV<T extends keyof EventList> {
 }
 
 export function translateWsEvent<T extends keyof EventList>(event: string, resp: WsResponse, bot: IOpenAPI): EventKV<T>[] {
-    function generateReplyFunction(type: 'guild'|'group'|'c2c'|'direct', mid: string, gid: string){
-        if (type === 'guild'){
-            return (content: string) => {
-                bot.messageApi.postMessage(gid, {
-                    content: content,
-                    msg_id: mid
-                })
+    function generateReplyFunction(type: 'guild' | 'group' | 'c2c' | 'direct', mid: string, gid: string) {
+        if (type === 'guild') {
+            return (content: string | Omit<MessageToCreate, "msg_id">) => {
+                if (typeof content == 'string') {
+                    bot.messageApi.postMessage(gid, {
+                        content: content,
+                        msg_id: mid
+                    })
+                }
+                else {
+                    bot.messageApi.postMessage(gid, {
+                        ...content,
+                        msg_id: mid
+                    })
+                }
             }
         }
-        else if (type === 'group'){
-            return (content: string) => {
-                bot.groupApi.postMessage(gid, {
-                    msg_type: 0,
-                    content: content,
-                    msg_id: mid
-                })
+        else if (type === 'group') {
+            return (content: string | Omit<GMessageToCreate, "msg_id">) => {
+                if (typeof content == 'string') {
+                    bot.groupApi.postMessage(gid, {
+                        msg_type: 0,
+                        content: content,
+                        msg_id: mid
+                    })
+                }
+                else {
+                    bot.groupApi.postMessage(gid, {
+                        ...content,
+                        msg_id: mid
+                    })
+                }
             }
         }
-        else if (type === 'c2c'){
-            return (content: string) => {
-                bot.c2cApi.postMessage(gid, {
-                    msg_type: 0,
-                    content: content,
-                    msg_id: mid
-                })
+        else if (type === 'c2c') {
+            return (content: string | Omit<GMessageToCreate, "msg_id">) => {
+                if (typeof content == 'string') {
+                    bot.c2cApi.postMessage(gid, {
+                        msg_type: 0,
+                        content: content,
+                        msg_id: mid
+                    })
+                }
+                else {
+                    bot.c2cApi.postMessage(gid, {
+                        ...content,
+                        msg_id: mid
+                    })
+                }
             }
         }
         else {
-            return (content: string) => {
-                bot.directMessageApi.postDirectMessage(gid, {
-                    content: content,
-                    msg_id: mid
-                })
+            return (content: string | Omit<MessageToCreate, "msg_id">) => {
+                if (typeof content == 'string') {
+                    bot.directMessageApi.postDirectMessage(gid, {
+                        content: content,
+                        msg_id: mid
+                    })
+                }
+                else {
+                    bot.directMessageApi.postDirectMessage(gid, {
+                        ...content,
+                        msg_id: mid
+                    })
+                }
             }
         }
     }
-    function generateAtFunction(type: 'user' | 'everyone', uid?: string){
-        if (type === 'user'){
+    function generateAtFunction(type: 'user' | 'everyone', uid?: string) {
+        if (type === 'user') {
             return () => {
                 return `<qqbot-at-user id="${uid}" />`
             }
