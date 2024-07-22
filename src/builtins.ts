@@ -11,39 +11,7 @@ export function getBuiltinPlugins(){
                     let content = '帮助信息: \n' + globalStage.commands.map((cmd) => {
                         return `${cmd.match} - ${cmd.description}`
                     }).join('\n')
-                    if(type == 'c2c'){
-                        let uid = (event as C2cMessageEvent).user.id
-                        let mid = (event as C2cMessageEvent).id
-                        bot.c2cApi.postMessage(uid, {
-                            msg_type: 0,
-                            content: content,
-                            msg_id: mid
-                        })
-                    }
-                    else if(type == 'group'){
-                        let gid = (event as GroupMessageEvent).group.id
-                        let mid = (event as GroupMessageEvent).id
-                        bot.groupApi.postMessage(gid, {
-                            msg_type: 0,
-                            content: content,
-                            msg_id: mid
-                        })
-                    }
-                    else if(type == 'guild'){
-                        let cid = (event as GuildMessageEvent).channel.id
-                        let mid = (event as GuildMessageEvent).id
-                        bot.messageApi.postMessage(cid, {
-                            content: content,
-                            msg_id: mid
-                        })
-                    }
-                    else if(type == 'direct'){
-                        let gid = (event as GuildMessageEvent).guild.id
-                        bot.directMessageApi.postDirectMessage(gid, {
-                            content: content,
-                            msg_id: (event as GuildMessageEvent).id
-                        })
-                    }
+                    event.reply(content)
                 })
             })
             return plugin
@@ -53,39 +21,7 @@ export function getBuiltinPlugins(){
             plugin.onMounted((bot) => {
                 plugin.command.register("/echo","重复你说的话", (type, _msgs, event) => {
                     let content = _msgs.join(" ")
-                    if(type == 'c2c'){
-                        let uid = (event as C2cMessageEvent).user.id
-                        let mid = (event as C2cMessageEvent).id
-                        bot.c2cApi.postMessage(uid, {
-                            msg_type: 0,
-                            content: content,
-                            msg_id: mid
-                        })
-                    }
-                    else if(type == 'group'){
-                        let gid = (event as GroupMessageEvent).group.id
-                        let mid = (event as GroupMessageEvent).id
-                        bot.groupApi.postMessage(gid, {
-                            msg_type: 0,
-                            content: content,
-                            msg_id: mid
-                        })
-                    }
-                    else if(type == 'guild'){
-                        let cid = (event as GuildMessageEvent).channel.id
-                        let mid = (event as GuildMessageEvent).id
-                        bot.messageApi.postMessage(cid, {
-                            content: content,
-                            msg_id: mid
-                        })
-                    }
-                    else if(type == 'direct'){
-                        let gid = (event as GuildMessageEvent).guild.id
-                        bot.directMessageApi.postDirectMessage(gid, {
-                            content: content,
-                            msg_id: (event as GuildMessageEvent).id
-                        })
-                    }
+                    event.reply(content)
                 })
             })
             return plugin
