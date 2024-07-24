@@ -172,6 +172,11 @@ export class CocotaisBotPlugin extends EventEmitter {
         name: string
         version: string
     }
+    /**插件命令 */
+    public command: {
+        register(match: string, desc: string, fun: (type: 'guild' | 'group' | 'direct' | 'c2c', msgs: string[], event: GroupMessageEvent | C2cMessageEvent | GuildMessageEvent) => void, options?: CommandOption): number,
+        unregister(id: number): void
+    }
     constructor(name: string, version: string) {
         super()
         this.botContext = null;
@@ -184,6 +189,33 @@ export class CocotaisBotPlugin extends EventEmitter {
         this.config = {
             name: name,
             version: version
+        }
+        this.command = {
+            /**
+             * 注册一个命令
+             * @param match 命令匹配器
+             * @param desc 命令描述
+             * @param fun 命令执行器
+             * @returns 命令ID
+             */
+            register(match: string, desc: string, fun: (type: 'guild' | 'group' | 'direct' | 'c2c', msgs: string[], event: GroupMessageEvent | C2cMessageEvent | GuildMessageEvent) => void, options?: CommandOption) {
+                globalStage.commands.push({
+                    id: globalStage.commands.length,
+                    description: desc,
+                    match: match,
+                    provider: name,
+                    handler: fun,
+                    option: options
+                })
+                return globalStage.commands.length - 1;
+            },
+            /**
+             * 卸载一个命令
+             * @param id 命令ID
+             */
+            unregister(id: number) {
+                globalStage.commands = globalStage.commands.filter((v) => v.id != id)
+            }
         }
     }
     /**
@@ -204,7 +236,6 @@ export class CocotaisBotPlugin extends EventEmitter {
         this.botEvent = event
         this.id = botId
         this._mount(context)
-        this.command.name = this.config.name
         if (this.config.name.startsWith("builtin:")) {
             pushPluginOnly(this, "builtin")
         }
@@ -242,37 +273,6 @@ export class CocotaisBotPlugin extends EventEmitter {
      */
     onUnloaded(fun: () => void) {
         this._unmount = fun
-    }
-    /**
-     * 插件命令
-     */
-    command = {
-        name: "",
-        /**
-         * 注册一个命令
-         * @param match 命令匹配器
-         * @param desc 命令描述
-         * @param fun 命令执行器
-         * @returns 命令ID
-         */
-        register(match: string, desc: string, fun: (type: 'guild' | 'group' | 'direct' | 'c2c', msgs: string[], event: GroupMessageEvent | C2cMessageEvent | GuildMessageEvent) => void, options?: CommandOption) {
-            globalStage.commands.push({
-                id: globalStage.plugin.length,
-                description: desc,
-                match: match,
-                provider: this.name,
-                handler: fun,
-                option: options
-            })
-            return globalStage.plugin.length - 1;
-        },
-        /**
-         * 卸载一个命令
-         * @param id 命令ID
-         */
-        unregister(id: number) {
-            globalStage.commands = globalStage.commands.filter((v) => v.id != id)
-        }
     }
 }
 
