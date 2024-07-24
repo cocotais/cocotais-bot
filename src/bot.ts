@@ -109,7 +109,7 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter, event: EventEmit
         globalStage.commands.forEach((command) => {
             if (resp.message.content.trim().startsWith(command.match)) {
                 if (command.option) {
-                    if (!havePermission('group', command.option, resp.user.id, resp.guild.id, resp.channel.id)){
+                    if (!havePermission('group', command.option, resp.user.id, resp.guild.id, resp.channel.id)) {
                         return
                     }
                 }
@@ -121,7 +121,7 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter, event: EventEmit
         console.log(`[Direct] ${resp.guild.id}/${resp.user.id}: ${resp.message.content}`)
         globalStage.commands.forEach((command) => {
             if (command.option) {
-                if (!havePermission('direct', command.option, resp.user.id, resp.guild.id, resp.channel.id)){
+                if (!havePermission('direct', command.option, resp.user.id, resp.guild.id, resp.channel.id)) {
                     return
                 }
             }
@@ -134,7 +134,7 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter, event: EventEmit
         console.log(`[C2C] ${resp.user.id}: ${resp.message.content}`)
         globalStage.commands.forEach((command) => {
             if (command.option) {
-                if (!havePermission('c2c', command.option, resp.user.id)){
+                if (!havePermission('c2c', command.option, resp.user.id)) {
                     return
                 }
             }
@@ -147,7 +147,7 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter, event: EventEmit
         console.log(`[Group] ${resp.group.id}/${resp.user.id}: ${resp.message.content}`)
         globalStage.commands.forEach((command) => {
             if (command.option) {
-                if (!havePermission('group', command.option, resp.user.id, undefined, undefined, resp.group.id)){
+                if (!havePermission('group', command.option, resp.user.id, undefined, undefined, resp.group.id)) {
                     return
                 }
             }
@@ -157,7 +157,11 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter, event: EventEmit
         })
     })
     getBuiltinPlugins().forEach((plugin) => {
-        plugin.enableBot(context, ws, globalStage.plugin.length, event)
+        try {
+            plugin.enableBot(context, ws, globalStage.plugin.length, event)
+        } catch (e) {
+            console.error("[ERR(005)] 应用插件出现错误：(内部插件，请联系开发者) " + typeof e == "object" ? JSON.stringify(e) : String(e))
+        }
     })
 
 }

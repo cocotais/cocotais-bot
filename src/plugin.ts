@@ -48,6 +48,10 @@ async function applyPlugin(path: string, bot: IOpenAPI, ws: EventEmitter, event:
         const plugin: CocotaisBotPlugin = pluginModule.default;
         if (plugin.config.name.startsWith("builtin")) {
             console.error("[ERR(005)] 应用插件出现错误：插件名称非法，无法应用")
+            return {
+                success: false,
+                data: "invalid plugin name"
+            }
         }
         plugin.enableBot(bot, ws, globalStage.plugin.length, event);
         globalStage.plugin.push({
@@ -199,7 +203,7 @@ export class CocotaisBotPlugin extends EventEmitter {
         this.botWs = ws
         this.botEvent = event
         this.id = botId
-        try { this._mount(context) } catch (e) { console.error('[ERR(005)] 应用插件出现错误(运行时)：' + typeof e == "object" ? JSON.stringify(e) : String(e)) }
+        this._mount(context)
         this.command.name = this.config.name
         if (this.config.name.startsWith("builtin:")) {
             pushPluginOnly(this, "builtin")
@@ -215,7 +219,7 @@ export class CocotaisBotPlugin extends EventEmitter {
         this.removeAllHandler();
         // 移除provider是本插件的命令
         globalStage.commands = globalStage.commands.filter((v) => v.provider != this.config.name)
-        try { this._unmount() } catch (e) { console.error('[ERR(006)] 卸载插件出现错误(运行时)：' + typeof e == "object" ? JSON.stringify(e) : String(e)) }
+        this._unmount()
         this.botWs = null
         this.botContext = null
     }
