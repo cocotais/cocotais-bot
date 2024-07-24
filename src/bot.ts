@@ -1,7 +1,7 @@
 import { IOpenAPI } from "qq-bot-sdk";
 import { EventEmitter } from "events";
 import { globalStage } from ".";
-import { C2cMessageEvent, GroupMessageEvent, GuildMessageEvent, WsResponse, events } from "./types";
+import { C2cMessageEvent, CommandOption, GroupMessageEvent, GuildMessageEvent, WsResponse, events } from "./types";
 import { getBuiltinPlugins } from "./builtins";
 
 function keepAlive() {
@@ -19,6 +19,58 @@ function keepAlive() {
             console.error(`[WARN(001)] 错误堆栈: ${err.stack?.split("\n").join("\n[WARN(001)] ")}`)
         }
     })
+}
+
+export function havePermission(type: 'guild' | 'group' | 'direct' | 'c2c', option: CommandOption, user: string, guild?: string, channel?: string, group?: string) {
+    if (type === 'guild') {
+        if (option.availableScenes && !option.availableScenes.includes('guild')) {
+            return false
+        }
+    }
+    if (type === 'guild') {
+        if (option.availableScenes && !option.availableScenes.includes('guild')) {
+            return false
+        }
+    }
+    if (type === 'direct') {
+        if (option.availableScenes && !option.availableScenes.includes('direct')) {
+            return false
+        }
+    }
+    if (type === 'c2c') {
+        if (option.availableScenes && !option.availableScenes.includes('c2c')) {
+            return false
+        }
+    }
+    if (option.dontTriggerAt) {
+        if (user && option.dontTriggerAt.includes(user)) {
+            return false
+        }
+        if (group && option.dontTriggerAt.includes(group)) {
+            return false
+        }
+        if (guild && option.dontTriggerAt.includes(guild)) {
+            return false
+        }
+        if (channel && option.dontTriggerAt.includes(channel)) {
+            return false
+        }
+    }
+    if (option.onlyTriggerAt) {
+        if (user && !option.onlyTriggerAt.includes(user)) {
+            return false
+        }
+        if (group && !option.onlyTriggerAt.includes(group)) {
+            return false
+        }
+        if (guild && !option.onlyTriggerAt.includes(guild)) {
+            return false
+        }
+        if (channel && !option.onlyTriggerAt.includes(channel)) {
+            return false
+        }
+    }
+    return true
 }
 
 /**
@@ -56,14 +108,8 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter, event: EventEmit
         console.log(`[Guild] ${resp.guild.id}/${resp.channel.id}/${resp.user.id}: ${resp.message.content}`)
         globalStage.commands.forEach((command) => {
             if (resp.message.content.trim().startsWith(command.match)) {
-                if (command.option){
-                    if (command.option.availableScenes && !command.option.availableScenes.includes('guild')){
-                        return
-                    }
-                    if (command.option.dontTriggerAt && command.option.dontTriggerAt.includes(resp.user.id)){
-                        return
-                    }
-                    if (command.option.onlyTriggerAt && !command.option.onlyTriggerAt.includes(resp.user.id)){
+                if (command.option) {
+                    if (!havePermission('group', command.option, resp.user.id, resp.guild.id, resp.channel.id)){
                         return
                     }
                 }
@@ -71,17 +117,11 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter, event: EventEmit
             }
         })
     })
-    event.on('message.direct', (resp: GuildMessageEvent)=>{
+    event.on('message.direct', (resp: GuildMessageEvent) => {
         console.log(`[Direct] ${resp.guild.id}/${resp.user.id}: ${resp.message.content}`)
         globalStage.commands.forEach((command) => {
-            if (command.option){
-                if (command.option.availableScenes && !command.option.availableScenes.includes('direct')){
-                    return
-                }
-                if (command.option.dontTriggerAt && command.option.dontTriggerAt.includes(resp.user.id)){
-                    return
-                }
-                if (command.option.onlyTriggerAt && !command.option.onlyTriggerAt.includes(resp.user.id)){
+            if (command.option) {
+                if (!havePermission('direct', command.option, resp.user.id, resp.guild.id, resp.channel.id)){
                     return
                 }
             }
@@ -93,14 +133,8 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter, event: EventEmit
     event.on('message.c2c', (resp: C2cMessageEvent) => {
         console.log(`[C2C] ${resp.user.id}: ${resp.message.content}`)
         globalStage.commands.forEach((command) => {
-            if (command.option){
-                if (command.option.availableScenes && !command.option.availableScenes.includes('c2c')){
-                    return
-                }
-                if (command.option.dontTriggerAt && command.option.dontTriggerAt.includes(resp.user.id)){
-                    return
-                }
-                if (command.option.onlyTriggerAt && !command.option.onlyTriggerAt.includes(resp.user.id)){
+            if (command.option) {
+                if (!havePermission('c2c', command.option, resp.user.id)){
                     return
                 }
             }
@@ -109,17 +143,11 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter, event: EventEmit
             }
         })
     })
-    event.on('message.group', (resp: GroupMessageEvent)=>{
+    event.on('message.group', (resp: GroupMessageEvent) => {
         console.log(`[Group] ${resp.group.id}/${resp.user.id}: ${resp.message.content}`)
         globalStage.commands.forEach((command) => {
-            if (command.option){
-                if (command.option.availableScenes && !command.option.availableScenes.includes('group')){
-                    return
-                }
-                if (command.option.dontTriggerAt && command.option.dontTriggerAt.includes(resp.user.id)){
-                    return
-                }
-                if (command.option.onlyTriggerAt && !command.option.onlyTriggerAt.includes(resp.user.id)){
+            if (command.option) {
+                if (!havePermission('group', command.option, resp.user.id, undefined, undefined, resp.group.id)){
                     return
                 }
             }
