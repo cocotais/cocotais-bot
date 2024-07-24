@@ -56,6 +56,17 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter, event: EventEmit
         console.log(`[Guild] ${resp.guild.id}/${resp.channel.id}/${resp.user.id}: ${resp.message.content}`)
         globalStage.commands.forEach((command) => {
             if (resp.message.content.trim().startsWith(command.match)) {
+                if (command.option){
+                    if (command.option.availableScenes && !command.option.availableScenes.includes('guild')){
+                        return
+                    }
+                    if (command.option.dontTriggerAt && command.option.dontTriggerAt.includes(resp.user.id)){
+                        return
+                    }
+                    if (command.option.onlyTriggerAt && !command.option.onlyTriggerAt.includes(resp.user.id)){
+                        return
+                    }
+                }
                 command.handler('guild', resp.message.content.trim().split(' '), resp)
             }
         })
@@ -63,6 +74,17 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter, event: EventEmit
     event.on('message.direct', (resp: GuildMessageEvent)=>{
         console.log(`[Direct] ${resp.guild.id}/${resp.user.id}: ${resp.message.content}`)
         globalStage.commands.forEach((command) => {
+            if (command.option){
+                if (command.option.availableScenes && !command.option.availableScenes.includes('direct')){
+                    return
+                }
+                if (command.option.dontTriggerAt && command.option.dontTriggerAt.includes(resp.user.id)){
+                    return
+                }
+                if (command.option.onlyTriggerAt && !command.option.onlyTriggerAt.includes(resp.user.id)){
+                    return
+                }
+            }
             if (resp.message.content.trim().startsWith(command.match)) {
                 command.handler('direct', resp.message.content.trim().split(' '), resp)
             }
@@ -71,6 +93,17 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter, event: EventEmit
     event.on('message.c2c', (resp: C2cMessageEvent) => {
         console.log(`[C2C] ${resp.user.id}: ${resp.message.content}`)
         globalStage.commands.forEach((command) => {
+            if (command.option){
+                if (command.option.availableScenes && !command.option.availableScenes.includes('c2c')){
+                    return
+                }
+                if (command.option.dontTriggerAt && command.option.dontTriggerAt.includes(resp.user.id)){
+                    return
+                }
+                if (command.option.onlyTriggerAt && !command.option.onlyTriggerAt.includes(resp.user.id)){
+                    return
+                }
+            }
             if (resp.message.content.trim().startsWith(command.match)) {
                 command.handler('c2c', resp.message.content.trim().split(' '), resp)
             }
@@ -79,6 +112,17 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter, event: EventEmit
     event.on('message.group', (resp: GroupMessageEvent)=>{
         console.log(`[Group] ${resp.group.id}/${resp.user.id}: ${resp.message.content}`)
         globalStage.commands.forEach((command) => {
+            if (command.option){
+                if (command.option.availableScenes && !command.option.availableScenes.includes('group')){
+                    return
+                }
+                if (command.option.dontTriggerAt && command.option.dontTriggerAt.includes(resp.user.id)){
+                    return
+                }
+                if (command.option.onlyTriggerAt && !command.option.onlyTriggerAt.includes(resp.user.id)){
+                    return
+                }
+            }
             if (resp.message.content.trim().startsWith(command.match)) {
                 command.handler('group', resp.message.content.trim().split(' '), resp)
             }
