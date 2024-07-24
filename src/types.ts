@@ -424,11 +424,18 @@ export interface PluginStaged {
     pluginObject: CocotaisBotPlugin
 }
 
+export interface CommandOption {
+    availableScenes?: ('c2c' | 'group' | 'guild' | 'direct')[],
+    onlyTriggerAt?: string[],
+    dontTriggerAt?: string[]
+}
+
 export interface CommandStaged {
     id: number,
     description: string,
     match: string,
     provider: string,
+    option?: CommandOption
     handler: (type: any, msgs: string[], event: any) => void
 }
 
