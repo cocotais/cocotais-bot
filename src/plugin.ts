@@ -74,7 +74,7 @@ function removePlugin(id: number) {
     try {
         let path = globalStage.plugin[id].path
         if (path == "builtin") {
-            console.error("[ERR(006)] 卸载插件出现错误：插件内置，无法卸载")
+            console.error("[WARN(012)] 尝试卸载内置插件")
         }
         globalStage.plugin[id].pluginObject.disableBot()
         globalStage.plugin.splice(id, 1)
