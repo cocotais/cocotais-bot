@@ -27,8 +27,8 @@ export function havePermission(type: 'guild' | 'group' | 'direct' | 'c2c', optio
             return false
         }
     }
-    if (type === 'guild') {
-        if (option.availableScenes && !option.availableScenes.includes('guild')) {
+    if (type === 'group') {
+        if (option.availableScenes && !option.availableScenes.includes('group')) {
             return false
         }
     }
@@ -57,20 +57,20 @@ export function havePermission(type: 'guild' | 'group' | 'direct' | 'c2c', optio
         }
     }
     if (option.onlyTriggerAt) {
-        if (user && !option.onlyTriggerAt.includes(user)) {
-            return false
+        if (user && option.onlyTriggerAt.includes(user)) {
+            return true
         }
-        if (group && !option.onlyTriggerAt.includes(group)) {
-            return false
+        if (group && option.onlyTriggerAt.includes(group)) {
+            return true
         }
-        if (guild && !option.onlyTriggerAt.includes(guild)) {
-            return false
+        if (guild && option.onlyTriggerAt.includes(guild)) {
+            return true
         }
-        if (channel && !option.onlyTriggerAt.includes(channel)) {
-            return false
+        if (channel && option.onlyTriggerAt.includes(channel)) {
+            return true
         }
     }
-    return true
+    return false
 }
 
 /**
