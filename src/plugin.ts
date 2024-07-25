@@ -35,7 +35,7 @@ function autoloadPlugin() {
 
 async function pushPluginOnly(plugin: CocotaisBotPlugin, path: string) {
     globalStage.plugin.push({
-        id: globalStage.plugin.length,
+        id: globalStage.plugin[globalStage.plugin.length - 1].id+1,
         config: plugin.config,
         path: path,
         pluginObject: plugin
@@ -53,9 +53,9 @@ async function applyPlugin(path: string, bot: IOpenAPI, ws: EventEmitter, event:
                 data: "invalid plugin name"
             }
         }
-        plugin.enableBot(bot, ws, globalStage.plugin.length, event);
+        plugin.enableBot(bot, ws, globalStage.plugin[globalStage.plugin.length - 1].id+1, event);
         globalStage.plugin.push({
-            id: globalStage.plugin.length,
+            id: globalStage.plugin[globalStage.plugin.length - 1].id+1,
             config: plugin.config,
             path: path,
             pluginObject: plugin
@@ -76,12 +76,20 @@ async function applyPlugin(path: string, bot: IOpenAPI, ws: EventEmitter, event:
 
 function removePlugin(id: number) {
     try {
-        let path = globalStage.plugin[id].path
+        let plugin = globalStage.plugin.find(item => item.id == id)
+        if (!plugin) {
+            console.error("[ERR(006)] 卸载插件出现错误：无法找到此插件")
+            return {
+                success: false,
+                data: "plugin not found"
+            }
+        }
+        let path = plugin.path
         if (path == "builtin") {
             console.error("[WARN(012)] 尝试卸载内置插件")
         }
-        globalStage.plugin[id].pluginObject.disableBot()
-        globalStage.plugin.splice(id, 1)
+        plugin.pluginObject.disableBot()
+        globalStage.plugin = globalStage.plugin.filter(item => item.id != id)
         for (const key in require.cache) {
             if (key.includes(path)) {
                 delete require.cache[key];
@@ -101,7 +109,14 @@ function removePlugin(id: number) {
 }
 
 async function reloadPlugin(id: number) {
-    let temp = globalStage.plugin[id]
+    let temp = globalStage.plugin.find(item => item.id == id)
+    if (!temp) {
+        console.error("[ERR(007)] 重载插件出现错误：无法找到此插件")
+        return {
+            success: false,
+            data: "plugin not found"
+        }
+    }
     try {
         let remove = removePlugin(id)
         if (remove.success) {
@@ -200,14 +215,14 @@ export class CocotaisBotPlugin extends EventEmitter {
              */
             register(match: string, desc: string, fun: (type: 'guild' | 'group' | 'direct' | 'c2c', msgs: string[], event: GroupMessageEvent | C2cMessageEvent | GuildMessageEvent) => void, options?: CommandOption) {
                 globalStage.commands.push({
-                    id: globalStage.commands.length,
+                    id: globalStage.commands[globalStage.commands.length - 1].id+1,
                     description: desc,
                     match: match,
                     provider: name,
                     handler: fun,
                     option: options
                 })
-                return globalStage.commands.length - 1;
+                return globalStage.commands[globalStage.commands.length - 1].id;
             },
             /**
              * 卸载一个命令
