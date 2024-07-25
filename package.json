@@ -1,6 +1,6 @@
 {
   "name": "cocotais-bot",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "description": "基于 qq-bot-sdk 实现的的QQ官方机器人框架",
   "main": "lib/index.js",
   "directories": {
