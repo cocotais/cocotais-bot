@@ -34,8 +34,9 @@ function autoloadPlugin() {
 }
 
 async function pushPluginOnly(plugin: CocotaisBotPlugin, path: string) {
+    const id = globalStage.plugin.length == 0 ? 0 : globalStage.plugin[globalStage.plugin.length - 1].id+1
     globalStage.plugin.push({
-        id: globalStage.plugin[globalStage.plugin.length - 1].id+1,
+        id: id,
         config: plugin.config,
         path: path,
         pluginObject: plugin
@@ -53,9 +54,10 @@ async function applyPlugin(path: string, bot: IOpenAPI, ws: EventEmitter, event:
                 data: "invalid plugin name"
             }
         }
-        plugin.enableBot(bot, ws, globalStage.plugin[globalStage.plugin.length - 1].id+1, event);
+        const id = globalStage.plugin.length == 0 ? 0 : globalStage.plugin[globalStage.plugin.length - 1].id+1
+        plugin.enableBot(bot, ws, id, event);
         globalStage.plugin.push({
-            id: globalStage.plugin[globalStage.plugin.length - 1].id+1,
+            id: id,
             config: plugin.config,
             path: path,
             pluginObject: plugin
@@ -214,15 +216,16 @@ export class CocotaisBotPlugin extends EventEmitter {
              * @returns 命令ID
              */
             register(match: string, desc: string, fun: (type: 'guild' | 'group' | 'direct' | 'c2c', msgs: string[], event: GroupMessageEvent | C2cMessageEvent | GuildMessageEvent) => void, options?: CommandOption) {
+                const id = globalStage.commands.length == 0 ? 0 : globalStage.commands[globalStage.commands.length - 1].id
                 globalStage.commands.push({
-                    id: globalStage.commands[globalStage.commands.length - 1].id+1,
+                    id: id,
                     description: desc,
                     match: match,
                     provider: name,
                     handler: fun,
                     option: options
                 })
-                return globalStage.commands[globalStage.commands.length - 1].id;
+                return id;
             },
             /**
              * 卸载一个命令
