@@ -120,12 +120,12 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter, event: EventEmit
     event.on('message.direct', (resp: GuildMessageEvent) => {
         console.log(`[Direct] ${resp.guild.id}/${resp.user.id}: ${resp.message.content}`)
         globalStage.commands.forEach((command) => {
-            if (command.option) {
-                if (!havePermission('direct', command.option, resp.user.id, resp.guild.id, resp.channel.id)) {
-                    return
-                }
-            }
             if (resp.message.content.trim().startsWith(command.match)) {
+                if (command.option) {
+                    if (!havePermission('direct', command.option, resp.user.id, resp.guild.id, resp.channel.id)) {
+                        return
+                    }
+                }
                 command.handler('direct', resp.message.content.trim().split(' '), resp)
             }
         })
@@ -133,12 +133,12 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter, event: EventEmit
     event.on('message.c2c', (resp: C2cMessageEvent) => {
         console.log(`[C2C] ${resp.user.id}: ${resp.message.content}`)
         globalStage.commands.forEach((command) => {
-            if (command.option) {
-                if (!havePermission('c2c', command.option, resp.user.id)) {
-                    return
-                }
-            }
             if (resp.message.content.trim().startsWith(command.match)) {
+                if (command.option) {
+                    if (!havePermission('c2c', command.option, resp.user.id)) {
+                        return
+                    }
+                }
                 command.handler('c2c', resp.message.content.trim().split(' '), resp)
             }
         })
@@ -146,12 +146,12 @@ export function botHandler(context: IOpenAPI, ws: EventEmitter, event: EventEmit
     event.on('message.group', (resp: GroupMessageEvent) => {
         console.log(`[Group] ${resp.group.id}/${resp.user.id}: ${resp.message.content}`)
         globalStage.commands.forEach((command) => {
-            if (command.option) {
-                if (!havePermission('group', command.option, resp.user.id, undefined, undefined, resp.group.id)) {
-                    return
-                }
-            }
             if (resp.message.content.trim().startsWith(command.match)) {
+                if (command.option) {
+                    if (!havePermission('group', command.option, resp.user.id, undefined, undefined, resp.group.id)) {
+                        return
+                    }
+                }
                 command.handler('group', resp.message.content.trim().split(' '), resp)
             }
         })
