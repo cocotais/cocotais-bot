@@ -69,8 +69,9 @@ export function havePermission(type: 'guild' | 'group' | 'direct' | 'c2c', optio
         if (channel && option.onlyTriggerAt.includes(channel)) {
             return true
         }
+        return false
     }
-    return false
+    return true
 }
 
 /**
