@@ -136,10 +136,10 @@ if (!isRequired) {
                 await startBot(value)
             })
             .catch((err) => {
-                console.error("配置文件读取错误，请检查配置文件是否正确。")
+                console.error("[守护进程] 配置文件读取错误，请检查配置文件是否正确。")
             })
     } else {
-        console.log("您还没有生成配置文件，已为您自动生成。")
+        console.log("[守护进程] 您还没有生成配置文件，已为您自动生成。")
         fse.writeFileSync("./config.json", `{
     "appID": "",
     "token": "",
