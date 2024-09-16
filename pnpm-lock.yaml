@@ -9,11 +9,11 @@ importers:
   .:
     dependencies:
       pm2:
-        specifier: ^5.3.0
-        version: 5.4.1
+        specifier: ^5.4.2
+        version: 5.4.2
       qq-bot-sdk:
-        specifier: ^1.6.2
-        version: 1.6.2
+        specifier: ^1.7.0
+        version: 1.7.0
     devDependencies:
       '@types/fs-extra':
         specifier: ^11.0.4
@@ -43,6 +43,14 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
+
+  '@noble/curves@1.6.0':
+    resolution: {integrity: sha512-TlaHRXDehJuRNR9TfZDNQ45mMEd5dwUwmicsafcIX4SsNiqnCHKjE/1alYPd/lDRVhxdhUAlv8uEhMCI5zjIJQ==}
+    engines: {node: ^14.21.3 || >=16}
+
+  '@noble/hashes@1.5.0':
+    resolution: {integrity: sha512-1j6kQFb7QRru7eKN3ZDvRcP13rugwdxZqCjbiAVZfIJwgj2A65UmT4TgARXGlXgnRkORLTDTrO19ZErt7+QXgA==}
+    engines: {node: ^14.21.3 || >=16}
 
   '@pm2/agent@2.0.4':
     resolution: {integrity: sha512-n7WYvvTJhHLS2oBb1PjOtgLpMhgImOq8sXkPBw6smeg9LJBWZjiEgPKOpR8mn9UJZsB5P3W4V/MyvNnp31LKeA==}
@@ -481,8 +489,8 @@ packages:
   pm2-sysmonit@1.2.8:
     resolution: {integrity: sha512-ACOhlONEXdCTVwKieBIQLSi2tQZ8eKinhcr9JpZSUAL8Qy0ajIgRtsLxG/lwPOW3JEKqPyw/UaHmTWhUzpP4kA==}
 
-  pm2@5.4.1:
-    resolution: {integrity: sha512-y9ndADjy78XfzdbVHISn4WiUTrcvmsO7ieCtM/oC80rwPgBDg+bHkkz1e4eaLOW5a7sJsnDfQjJe4AqxNnIw5Q==}
+  pm2@5.4.2:
+    resolution: {integrity: sha512-ynVpBwZampRH3YWLwRepZpQ7X3MvpwLIaqIdFEeBYEhaXbHmEx2KqOdxGV4T54wvKBhH3LixvU1j1bK4/sq7Tw==}
     engines: {node: '>=12.0.0'}
     hasBin: true
 
@@ -496,8 +504,8 @@ packages:
   proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
 
-  qq-bot-sdk@1.6.2:
-    resolution: {integrity: sha512-fIPUxKvfTv30XmRi60VfPNDE3OYCkt75g5zRXu3oLZIWTv7bD10fI618ILtjY2hTAT4pApKLX9k7YRX7eicuZg==}
+  qq-bot-sdk@1.7.0:
+    resolution: {integrity: sha512-VKdQN/2FDPfJmEPYqAHD9m36sRNOkHqmc3eYs3KIyoMlccudIdpIsqD3iyW2ItLgUw2tFAyfDQ7Vkf6Qq631kw==}
 
   read@1.0.7:
     resolution: {integrity: sha512-rSOKNYUmaxy0om1BNjMN4ezNT6VKK+2xF4GBhc81mkH7L60i6dp8qPYrkndNLT3QPphoII3maL9PVC9XmhHwVQ==}
@@ -680,6 +688,12 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  '@noble/curves@1.6.0':
+    dependencies:
+      '@noble/hashes': 1.5.0
+
+  '@noble/hashes@1.5.0': {}
 
   '@pm2/agent@2.0.4':
     dependencies:
@@ -922,7 +936,7 @@ snapshots:
       to-regex-range: 5.0.1
 
   follow-redirects@1.15.6(debug@4.3.5):
-    dependencies:
+    optionalDependencies:
       debug: 4.3.5
 
   fs-extra@11.2.0:
@@ -946,7 +960,7 @@ snapshots:
       - supports-color
 
   git-node-fs@1.0.0(js-git@0.7.8):
-    dependencies:
+    optionalDependencies:
       js-git: 0.7.8
 
   git-sha1@0.1.2: {}
@@ -1135,7 +1149,7 @@ snapshots:
       - supports-color
     optional: true
 
-  pm2@5.4.1:
+  pm2@5.4.2:
     dependencies:
       '@pm2/agent': 2.0.4
       '@pm2/io': 6.0.1
@@ -1192,8 +1206,9 @@ snapshots:
 
   proxy-from-env@1.1.0: {}
 
-  qq-bot-sdk@1.6.2:
+  qq-bot-sdk@1.7.0:
     dependencies:
+      '@noble/curves': 1.6.0
       axios: 0.24.0
       loglevel: 1.9.1
       resty-client: 0.0.5
