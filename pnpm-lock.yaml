@@ -12,8 +12,8 @@ importers:
         specifier: ^5.4.2
         version: 5.4.2
       qq-bot-sdk:
-        specifier: ^1.7.0
-        version: 1.7.0
+        specifier: ^1.8.0
+        version: 1.8.0
     devDependencies:
       '@types/fs-extra':
         specifier: ^11.0.4
@@ -504,8 +504,8 @@ packages:
   proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
 
-  qq-bot-sdk@1.7.0:
-    resolution: {integrity: sha512-VKdQN/2FDPfJmEPYqAHD9m36sRNOkHqmc3eYs3KIyoMlccudIdpIsqD3iyW2ItLgUw2tFAyfDQ7Vkf6Qq631kw==}
+  qq-bot-sdk@1.8.0:
+    resolution: {integrity: sha512-U2aT8rX7tNv5Tm+ajUMs7XGbnN68syu0kz8WhUysW/AEIUPwvr6eBsDrPGk4XiHolbbdOldmUuR+q+NnwQSgVA==}
 
   read@1.0.7:
     resolution: {integrity: sha512-rSOKNYUmaxy0om1BNjMN4ezNT6VKK+2xF4GBhc81mkH7L60i6dp8qPYrkndNLT3QPphoII3maL9PVC9XmhHwVQ==}
@@ -1206,7 +1206,7 @@ snapshots:
 
   proxy-from-env@1.1.0: {}
 
-  qq-bot-sdk@1.7.0:
+  qq-bot-sdk@1.8.0:
     dependencies:
       '@noble/curves': 1.6.0
       axios: 0.24.0
