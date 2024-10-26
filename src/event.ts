@@ -372,8 +372,7 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             let c2cResp = {
                 id: resp.msg.id,
                 user: {
-                    id: resp.msg.author.user_openid,
-                    at: generateAtFunction('user', resp.msg.author.user_openid)
+                    id: resp.msg.author.user_openid
                 },
                 message: {
                     content: resp.msg.content,
@@ -389,6 +388,32 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
             (ans as EventKV<'message'>[]).push({
                 event: 'message',
                 resp: c2cResp
+            });
+            break;
+
+        case 'C2C_MSG_REJECT':
+            let resC2cReject = {
+                user: {
+                    id: resp.msg.openid,
+                },
+                time: resp.msg.timestamp
+            };
+            (ans as EventKV<'message.c2c.reject'>[]).push({
+                event: 'message.c2c.reject',
+                resp: resC2cReject
+            });
+            break;
+
+        case 'C2C_MSG_RECEIVE':
+            let resC2cReceive = {
+                user: {
+                    id: resp.msg.openid,
+                },
+                time: resp.msg.timestamp
+            };
+            (ans as EventKV<'message.c2c.receive'>[]).push({
+                event: 'message.c2c.receive',
+                resp: resC2cReceive
             });
             break;
 
@@ -419,6 +444,41 @@ export function translateWsEvent<T extends keyof EventList>(event: string, resp:
                 resp: groupResp
             });
             break;
+
+        case 'GROUP_MSG_REJECT':
+            let resGroupReject = {
+                group: {
+                    id: resp.msg.group_openid
+                },
+                user: {
+                    id: resp.msg.op_member_openid,
+                    at: generateAtFunction('user', resp.msg.op_member_openid)
+                },
+                time: resp.msg.timestamp
+            };
+            (ans as EventKV<'message.group.reject'>[]).push({
+                event: 'message.group.reject',
+                resp: resGroupReject
+            });
+            break;
+
+        case 'GROUP_MSG_RECEIVE':
+            let resGroupReceive = {
+                group: {
+                    id: resp.msg.group_openid
+                },
+                user: {
+                    id: resp.msg.op_member_openid,
+                    at: generateAtFunction('user', resp.msg.op_member_openid)
+                },
+                time: resp.msg.timestamp
+            };
+            (ans as EventKV<'message.group.receive'>[]).push({
+                event: 'message.group.receive',
+                resp: resGroupReceive
+            });
+            break;
+
         // 频道私信消息
         case 'DIRECT_MESSAGE_CREATE':
             let directResp = {
