@@ -4,6 +4,7 @@ import { C2cMessageEvent, CommandOption, EventList, events, GroupMessageEvent, G
 import { translateWsEvent } from './event'
 import { globalStage } from ".";
 import fse from 'fs-extra'
+import { resolve } from 'path'
 
 function unsafelyDo(func: Function, ...args: any) {
     try {
@@ -34,7 +35,7 @@ function autoloadPlugin() {
 }
 
 async function pushPluginOnly(plugin: CocotaisBotPlugin, path: string) {
-    const id = globalStage.plugin.length == 0 ? 0 : globalStage.plugin[globalStage.plugin.length - 1].id+1
+    const id = globalStage.plugin.length == 0 ? 0 : globalStage.plugin[globalStage.plugin.length - 1].id + 1
     globalStage.plugin.push({
         id: id,
         config: plugin.config,
@@ -54,7 +55,7 @@ async function applyPlugin(path: string, bot: IOpenAPI, ws: EventEmitter, event:
                 data: "invalid plugin name"
             }
         }
-        const id = globalStage.plugin.length == 0 ? 0 : globalStage.plugin[globalStage.plugin.length - 1].id+1
+        const id = globalStage.plugin.length == 0 ? 0 : globalStage.plugin[globalStage.plugin.length - 1].id + 1
         plugin.enableBot(bot, ws, id, event);
         globalStage.plugin.push({
             id: id,
@@ -93,7 +94,7 @@ function removePlugin(id: number) {
         plugin.pluginObject.disableBot()
         globalStage.plugin = globalStage.plugin.filter(item => item.id != id)
         for (const key in require.cache) {
-            if (key.includes(path)) {
+            if (key.includes(resolve(__dirname, path))) {
                 delete require.cache[key];
             }
         }
