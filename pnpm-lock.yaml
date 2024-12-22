@@ -587,8 +587,8 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  systeminformation@5.22.11:
-    resolution: {integrity: sha512-aLws5yi4KCHTb0BVvbodQY5bY8eW4asMRDTxTW46hqw9lGjACX6TlLdJrkdoHYRB0qs+MekqEq1zG7WDnWE8Ug==}
+  systeminformation@5.23.16:
+    resolution: {integrity: sha512-1NFCUPy2CAHs5bQUKrcFmi93j8TA5UrlKqSZKvo5jdxcEeuscApay9f0kT13HNWWLenssINDtY6VfddFu7IQjQ==}
     engines: {node: '>=8.0.0'}
     os: [darwin, linux, win32, freebsd, openbsd, netbsd, sunos, android]
     hasBin: true
@@ -1143,7 +1143,7 @@ snapshots:
       async: 3.2.5
       debug: 4.3.5
       pidusage: 2.0.21
-      systeminformation: 5.22.11
+      systeminformation: 5.23.16
       tx2: 1.0.5
     transitivePeerDependencies:
       - supports-color
@@ -1296,7 +1296,7 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  systeminformation@5.22.11:
+  systeminformation@5.23.16:
     optional: true
 
   to-regex-range@5.0.1:
