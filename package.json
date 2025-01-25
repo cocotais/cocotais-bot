@@ -29,5 +29,11 @@
     "@types/ws": "^8.5.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "axios@>=0.8.1 <0.28.0": ">=0.28.0",
+      "systeminformation@<=5.23.6": ">=5.23.7"
+    }
   }
 }
