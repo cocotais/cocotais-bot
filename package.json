@@ -7,8 +7,8 @@
     "lib": "lib"
   },
   "dependencies": {
-    "pm2": "^5.4.2",
-    "qq-bot-sdk": "^1.8.0"
+    "pm2": "^5.4.3",
+    "qq-bot-sdk": "^1.9.1"
   },
   "scripts": {
     "build": "tsc",
@@ -26,9 +26,9 @@
   "types": "./lib/index.d.ts",
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
-    "@types/ws": "^8.5.10",
+    "@types/ws": "^8.18.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.8.3"
   },
   "pnpm": {
     "overrides": {
