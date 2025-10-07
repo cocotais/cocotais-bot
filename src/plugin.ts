@@ -29,7 +29,7 @@ function autoloadPlugin() {
         return true
     }
     catch (e) {
-        console.error("[ERR(004)] 自动加载插件出现错误：" + typeof e == "object" ? JSON.stringify(e) : String(e))
+        console.error("[ERR(004)] 自动加载插件出现错误：" + (typeof e == "object" ? JSON.stringify(e) : String(e)))
         return false
     }
 }
@@ -68,7 +68,7 @@ async function applyPlugin(path: string, bot: IOpenAPI, ws: EventEmitter, event:
             data: null
         }
     } catch (e) {
-        console.error("[ERR(005)] 应用插件出现错误：" + typeof e == "object" ? JSON.stringify(e) : String(e))
+        console.error("[ERR(005)] 应用插件出现错误：" + (typeof e == "object" ? JSON.stringify(e) : String(e)))
         return {
             success: false,
             data: typeof e == "object" ? JSON.stringify(e) : String(e)
@@ -103,7 +103,7 @@ function removePlugin(id: number) {
             data: null
         }
     } catch (e) {
-        console.error("[ERR(006)] 卸载插件出现错误：" + typeof e == "object" ? JSON.stringify(e) : String(e))
+        console.error("[ERR(006)] 卸载插件出现错误：" + (typeof e == "object" ? JSON.stringify(e) : String(e)))
         return {
             success: false,
             data: typeof e == "object" ? JSON.stringify(e) : String(e)
@@ -154,7 +154,7 @@ async function reloadPlugin(id: number) {
         }
 
     } catch (e) {
-        console.error("[ERR(009)] 重载插件出现错误：" + typeof e == "object" ? JSON.stringify(e) : String(e))
+        console.error("[ERR(009)] 重载插件出现错误：" + (typeof e == "object" ? JSON.stringify(e) : String(e)))
         return {
             success: false,
             data: typeof e == "object" ? JSON.stringify(e) : String(e)
@@ -217,7 +217,7 @@ export class CocotaisBotPlugin extends EventEmitter {
              * @returns 命令ID
              */
             register(match: string, desc: string, fun: (type: 'guild' | 'group' | 'direct' | 'c2c', msgs: string[], event: GroupMessageEvent | C2cMessageEvent | GuildMessageEvent) => void, options?: CommandOption) {
-                const id = globalStage.commands.length == 0 ? 0 : globalStage.commands[globalStage.commands.length - 1].id
+                const id = globalStage.commands.length == 0 ? 0 : globalStage.commands[globalStage.commands.length - 1].id + 1
                 globalStage.commands.push({
                     id: id,
                     description: desc,
