@@ -54,7 +54,7 @@ $ npm install cocotais-bot
 
 #### 📝 许可证
 
-Copyright © 2024 [Cocotais Team][profile-link]. <br />
+Copyright © 2024-2025 [Cocotais Team][profile-link]. <br />
 许可证：[Apache 2.0](./LICENSE)
 
 [profile-link]: https://github.com/cocotais
