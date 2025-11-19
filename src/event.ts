@@ -1,6 +1,6 @@
 import { EventEmitter } from "node:events";
 import { events, EventList, WsResponse, ReactionEvent, MessageAuditEvent, UserEvent, InteractionEvent, ThreadEvent, PostEvent, ReplyEvent, ForumAuditEvent } from "./types";
-import { GMessageToCreate, IOpenAPI, MessageToCreate } from "qq-bot-sdk";
+import { GMessageToCreate, IOpenAPI, MessageToCreate } from "@liulyxandy/qq-bot-sdk";
 
 interface EventKV<T extends keyof EventList> {
     event: T,

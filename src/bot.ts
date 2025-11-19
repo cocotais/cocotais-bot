@@ -1,4 +1,4 @@
-import { IOpenAPI } from "qq-bot-sdk";
+import { IOpenAPI } from "@liulyxandy/qq-bot-sdk";
 import { EventEmitter } from "events";
 import { globalStage } from ".";
 import { C2cMessageEvent, CommandOption, GroupMessageEvent, GuildMessageEvent, WsResponse, events } from "./types";

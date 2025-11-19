@@ -1,6 +1,6 @@
 import fse from 'fs-extra'
 import { startBot } from './start'
-import { GetWsParam, Config } from 'qq-bot-sdk';
+import { GetWsParam, Config } from '@liulyxandy/qq-bot-sdk';
 import plugin, { CocotaisBotPlugin } from './plugin';
 import { Stage } from './types';
 

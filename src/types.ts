@@ -1,4 +1,4 @@
-import { GMessageToCreate, IOpenAPI, MessageToCreate } from "qq-bot-sdk"
+import { GMessageToCreate, IOpenAPI, MessageToCreate } from "@liulyxandy/qq-bot-sdk"
 import { CocotaisBotPlugin } from "./plugin"
 import { EventEmitter } from "ws"
 

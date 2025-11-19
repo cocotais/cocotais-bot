@@ -17,12 +17,12 @@ importers:
 
   .:
     dependencies:
+      '@liulyxandy/qq-bot-sdk':
+        specifier: ^1.10.0
+        version: 1.10.0
       pm2:
         specifier: ^5.4.3
         version: 5.4.3
-      qq-bot-sdk:
-        specifier: ^1.9.1
-        version: 1.9.1
     devDependencies:
       '@types/fs-extra':
         specifier: ^11.0.4
@@ -53,8 +53,11 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@noble/curves@1.9.1':
-    resolution: {integrity: sha512-k11yZxZg+t+gWvBbIswW0yoJlu8cHOC7dhunwOzoWH/mXGBiYyR4YY6hAEK/3EUs4UpB8la1RfdRpeGsFHkWsA==}
+  '@liulyxandy/qq-bot-sdk@1.10.0':
+    resolution: {integrity: sha512-mYU/DB3mbjEbCqYEAWIFkXagQ/CGaab211tgXD9MQEAaB+QHjgyco8+Cx0vvqkGs96D8pOI/Bg1rjLq+4BJc0A==}
+
+  '@noble/curves@1.9.7':
+    resolution: {integrity: sha512-gbKGcRUYIjA3/zCCNaWDciTMFI0dCkvou3TL8Zmy5Nc7sJ47a0jtOeZoTaMxkuqRo9cRhjOdZJXegxYE5FN/xw==}
     engines: {node: ^14.21.3 || >=16}
 
   '@noble/hashes@1.8.0':
@@ -345,8 +348,8 @@ packages:
       debug:
         optional: true
 
-  form-data@4.0.4:
-    resolution: {integrity: sha512-KrGhL9Q4zjj0kiUt5OO4Mr/A/jlI2jDYs5eHBpYHPcBEVSiipAvn2Ko2HnPe20rmcuuvMHNdZFp+4IlGTMF0Ow==}
+  form-data@4.0.5:
+    resolution: {integrity: sha512-8RipRLol37bNs2bhoV67fiTEvdTrbMUYcFTiy3+wuuOnUog2QBHCZWXDRijWQfAkhBj2Uf5UnVaiWwA5vdd82w==}
     engines: {node: '>= 6'}
 
   fsevents@2.3.3:
@@ -580,9 +583,6 @@ packages:
   proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
 
-  qq-bot-sdk@1.9.1:
-    resolution: {integrity: sha512-TGUv/ZspK6mMK5PWuWJmfKVWD4QghvEql1Tz2Ig4ykyEwxs01H8KGmFRtDOtEecCCc22NaFGwKaM68+rJCQKZQ==}
-
   read@1.0.7:
     resolution: {integrity: sha512-rSOKNYUmaxy0om1BNjMN4ezNT6VKK+2xF4GBhc81mkH7L60i6dp8qPYrkndNLT3QPphoII3maL9PVC9XmhHwVQ==}
     engines: {node: '>=0.8'}
@@ -728,8 +728,8 @@ packages:
       utf-8-validate:
         optional: true
 
-  ws@8.18.2:
-    resolution: {integrity: sha512-DMricUmwGZUVr++AEAe2uiVM7UoO9MAVZMDu05UQOaUII0lp+zOzLLU4Xqh/JvTqklB1T4uELaaPBKyjE1r4fQ==}
+  ws@8.18.3:
+    resolution: {integrity: sha512-PEIGCY5tSlUt50cqyMXfCzX+oOPqN0vuGqWzbcJ2xvnkzkq46oOpz7dQaTDBdfICb4N14+GARUDw2XV2N4tvzg==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -762,7 +762,19 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@noble/curves@1.9.1':
+  '@liulyxandy/qq-bot-sdk@1.10.0':
+    dependencies:
+      '@noble/curves': 1.9.7
+      axios: 1.13.2
+      loglevel: 1.9.2
+      resty-client: 0.0.5
+      ws: 8.18.3
+    transitivePeerDependencies:
+      - bufferutil
+      - debug
+      - utf-8-validate
+
+  '@noble/curves@1.9.7':
     dependencies:
       '@noble/hashes': 1.8.0
 
@@ -890,7 +902,7 @@ snapshots:
   axios@1.13.2:
     dependencies:
       follow-redirects: 1.15.9(debug@4.3.7)
-      form-data: 4.0.4
+      form-data: 4.0.5
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
@@ -1048,7 +1060,7 @@ snapshots:
     optionalDependencies:
       debug: 4.3.7
 
-  form-data@4.0.4:
+  form-data@4.0.5:
     dependencies:
       asynckit: 0.4.0
       combined-stream: 1.0.8
@@ -1340,18 +1352,6 @@ snapshots:
 
   proxy-from-env@1.1.0: {}
 
-  qq-bot-sdk@1.9.1:
-    dependencies:
-      '@noble/curves': 1.9.1
-      axios: 1.13.2
-      loglevel: 1.9.2
-      resty-client: 0.0.5
-      ws: 8.18.2
-    transitivePeerDependencies:
-      - bufferutil
-      - debug
-      - utf-8-validate
-
   read@1.0.7:
     dependencies:
       mute-stream: 0.0.8
@@ -1481,7 +1481,7 @@ snapshots:
 
   ws@7.5.10: {}
 
-  ws@8.18.2: {}
+  ws@8.18.3: {}
 
   yallist@4.0.0: {}
 

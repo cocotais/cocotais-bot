@@ -6,6 +6,8 @@
 
 基于 [qq-bot-sdk](https://www.npmjs.com/package/qq-bot-sdk) 实现的的QQ官方机器人框架
 
+> 项目现使用 qq-bot-sdk 的 fork 版本 [@liulyxandy/qq-bot-sdk](https://www.npmjs.com/package/@liulyxandy/qq-bot-sdk)
+
 [![][cocotais-bot-文档-shield]][cocotais-bot-文档-link]
 
 

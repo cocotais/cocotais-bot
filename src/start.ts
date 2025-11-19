@@ -1,4 +1,4 @@
-import { GetWsParam, Config, createOpenAPI, createWebsocket } from 'qq-bot-sdk';
+import { GetWsParam, Config, createOpenAPI, createWebsocket } from '@liulyxandy/qq-bot-sdk';
 import { botHandler } from './bot';
 import { globalStage } from '.';
 import { CocotaisBotEvent } from './event';
