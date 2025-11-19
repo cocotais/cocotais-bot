@@ -8,16 +8,15 @@
 
 > 项目现使用 qq-bot-sdk 的 fork 版本 [@liulyxandy/qq-bot-sdk](https://www.npmjs.com/package/@liulyxandy/qq-bot-sdk)
 
-[![][cocotais-bot-文档-shield]][cocotais-bot-文档-link]
-
 
 [![][npm-release-shield]][npm-release-link]
 [![][npm-types-shield]][npm-types-link]
 
 
 
-
-[Changelog](https://bot.cocotais.cn/reference/changelog)
+[文档](https://github.com/cocotais/cocotais-bot-doc)
+·
+[Changelog](https://github.com/cocotais/cocotais-bot-doc/blob/master/reference/changelog.md)
 
 ![](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
@@ -31,7 +30,7 @@
 
 ## 📦 安装
 
-要安装 `cocotais-bot`，请参阅 [快速开始](https://bot.cocotais.cn/starter/quickstart)。你也可以这样快速安装
+要安装 `cocotais-bot`，请参阅 [快速开始](https://github.com/cocotais/cocotais-bot-doc/blob/master/starter/quickstart.md)。你也可以这样快速安装
 :
 
 ```bash
@@ -57,8 +56,6 @@ Copyright © 2024-2025 [Cocotais Team][profile-link]. <br />
 许可证：[Apache 2.0](./LICENSE)
 
 [profile-link]: https://github.com/cocotais
-[cocotais-bot-文档-shield]: https://img.shields.io/website?down_message=%E7%A6%BB%E7%BA%BF&label=Cocotais%20Bot%20%E6%96%87%E6%A1%A3&labelColor=black&style=flat-square&up_message=%E5%9C%A8%E7%BA%BF&url=https%3A%2F%2Fbot.cocotais.cn%2F
-[cocotais-bot-文档-link]: https://bot.cocotais.cn/
 [npm-release-shield]: https://img.shields.io/npm/v/cocotais-bot?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
 [npm-release-link]: https://www.npmjs.com/package/cocotais-bot
 [npm-types-shield]: https://img.shields.io/npm/types/cocotais-bot?labelColor=black&style=flat-square
